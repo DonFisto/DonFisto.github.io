@@ -1,0 +1,22 @@
+---
+import { timeline } from "../data/autonomousDriving";
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<ol class:list={["development-timeline", compact && "development-timeline--compact"]}>
+  {timeline.map((phase) => (
+    <li class:list={[phase.index === 7 && "development-timeline__current"]} data-timeline-phase={phase.index}>
+      <div class="development-timeline__index">{String(phase.index).padStart(2, "0")}</div>
+      <div>
+        <h3>{phase.title}</h3>
+        {!compact && <p>{phase.summary}</p>}
+        <span>{phase.outcome}</span>
+      </div>
+    </li>
+  ))}
+</ol>

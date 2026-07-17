@@ -1,0 +1,17 @@
+---
+import { technicalDetails } from "../data/autonomousDriving";
+---
+
+<div class="technical-detail-grid">
+  {technicalDetails.map((detail) => (
+    <article class={`technical-detail technical-detail--${detail.accent}`} data-technical-detail={detail.id}>
+      <h3>{detail.title}</h3>
+      <dl>
+        <div><dt>Input</dt><dd>{detail.input}</dd></div>
+        <div><dt>Method</dt><dd>{detail.method}</dd></div>
+        <div><dt>Output</dt><dd>{detail.output}</dd></div>
+      </dl>
+      <p>{detail.engineeringNote}</p>
+    </article>
+  ))}
+</div>

@@ -1,0 +1,19 @@
+---
+import { featuredTopics } from "../data/autonomousDriving";
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div class:list={["topic-grid", compact && "topic-grid--compact"]} aria-label="Selected ROS2 topics">
+  {featuredTopics.map((topic) => (
+    <article class={`topic-card topic-card--${topic.stage}`} data-topic={topic.name}>
+      <code>{topic.name}</code>
+      <span>{topic.messageType}</span>
+      {!compact && <p>{topic.role}</p>}
+    </article>
+  ))}
+</div>

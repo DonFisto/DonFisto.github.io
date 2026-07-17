@@ -271,3 +271,65 @@
     -webkit-print-color-adjust: exact;
   }
 }
+/* Phase 3 print architecture */
+.pdf-page .architecture-scroll-hint,
+.pdf-page .architecture-caption,
+.pdf-page .architecture-linear-summary {
+  display: none;
+}
+
+.pdf-page .architecture-svg-wrap {
+  overflow: hidden;
+  border-radius: 2mm;
+  box-shadow: none;
+}
+
+.pdf-page .architecture-svg {
+  width: 100%;
+  min-width: 0;
+  max-height: 122mm;
+}
+
+.pdf-page .topic-grid--compact {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5mm;
+  margin-top: 3mm;
+}
+
+.pdf-page .topic-grid--compact .topic-card {
+  min-height: 17mm;
+  padding: 2mm;
+  border-top-width: 0.7mm;
+}
+
+.pdf-page .topic-grid--compact code {
+  font-size: 5.8pt;
+}
+
+.pdf-page .topic-grid--compact span {
+  margin-top: 1mm;
+  font-size: 4.8pt;
+}
+
+.pdf-page .development-timeline--compact {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1.3mm;
+  margin-top: 5mm;
+}
+
+.pdf-page .development-timeline--compact li {
+  min-height: 24mm;
+  padding: 2.2mm;
+  border-radius: 1.5mm;
+}
+
+.pdf-page .development-timeline--compact h3 {
+  margin: 1mm 0;
+  font-size: 6.8pt;
+}
+
+.pdf-page .development-timeline--compact li span,
+.pdf-page .development-timeline__index {
+  font-size: 5.4pt;
+}

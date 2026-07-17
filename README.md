@@ -58,3 +58,15 @@ This runs Astro type checking, creates the production build, and verifies critic
 ## Media
 
 Authentic project media will be integrated in Phase 4. Until then, placeholders are explicitly labelled and cannot be confused with real results.
+
+## Phase 3 status
+
+The source now includes the verified technical narrative:
+
+- accessible vector system architecture;
+- selected ROS2 interfaces;
+- engineering contribution categories;
+- detailed subsystem methods and boundaries;
+- eight-phase development trajectory.
+
+Authentic repository media remains scheduled for Phase 4. The legacy root `index.html` is still intentionally preserved and remains the branch-root deployment entry point.

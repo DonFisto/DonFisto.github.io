@@ -1,0 +1,115 @@
+---
+import {
+  architectureEdges,
+  architectureGroups,
+  architectureNodes,
+  architectureSummary,
+} from "../data/autonomousDriving";
+
+interface Props {
+  compact?: boolean;
+  printMode?: boolean;
+}
+
+const { compact = false, printMode = false } = Astro.props;
+const titleId = printMode ? "architecture-title-print" : compact ? "architecture-title-compact" : "architecture-title";
+const descriptionId = printMode
+  ? "architecture-description-print"
+  : compact
+    ? "architecture-description-compact"
+    : "architecture-description";
+---
+
+<figure class:list={["architecture-figure", compact && "architecture-figure--compact", printMode && "architecture-figure--print"]}>
+  {!printMode && (
+    <p class="architecture-scroll-hint">On narrow screens, scroll the diagram horizontally or use the linear summary below.</p>
+  )}
+  <div class="architecture-svg-wrap" tabindex={printMode ? undefined : "0"} aria-label={printMode ? undefined : "Scrollable system architecture diagram"}>
+    <svg
+      class="architecture-svg"
+      viewBox="0 0 1250 660"
+      role="img"
+      aria-labelledby={`${titleId} ${descriptionId}`}
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <title id={titleId}>Autonomous-driving perception and local-mapping architecture</title>
+      <desc id={descriptionId}>
+        CARLA RGB branches into semantic segmentation and relative monocular depth. Semantic masks feed object extraction,
+        tracking, free-space estimation and local occupancy. Tracking and depth feed object-depth fusion. Local occupancy
+        and simulator-provided hero odometry feed short-term accumulated local mapping.
+      </desc>
+
+      <defs>
+        <marker id="architecture-arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L9,4.5 L0,9 Z" class="architecture-arrow-head"></path>
+        </marker>
+        <marker id="architecture-arrow-aux" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L9,4.5 L0,9 Z" class="architecture-arrow-head architecture-arrow-head--aux"></path>
+        </marker>
+      </defs>
+
+      <g class="architecture-group-labels" aria-hidden="true">
+        {architectureGroups.map((group) => (
+          <text class={`architecture-group-label architecture-group-label--${group.accent}`} x={group.x} y={group.y}>
+            {group.label}
+          </text>
+        ))}
+      </g>
+
+      <g class="architecture-edges" aria-hidden="true">
+        {architectureEdges.map((edge) => (
+          <path
+            class:list={["architecture-edge", edge.style === "auxiliary" && "architecture-edge--auxiliary"]}
+            d={edge.path}
+            marker-end={edge.style === "auxiliary" ? "url(#architecture-arrow-aux)" : "url(#architecture-arrow)"}
+            data-architecture-edge={edge.id}
+            data-from={edge.from}
+            data-to={edge.to}
+          ></path>
+        ))}
+      </g>
+
+      <g class="architecture-nodes">
+        {architectureNodes.map((node) => (
+          <g
+            class={`architecture-node architecture-node--${node.group}`}
+            transform={`translate(${node.x} ${node.y})`}
+            data-architecture-node={node.id}
+          >
+            <rect width={node.width} height={node.height} rx="12"></rect>
+            <text class="architecture-node-label" x={node.width / 2} y="28" text-anchor="middle">
+              {node.labelLines.map((line, index) => (
+                <tspan x={node.width / 2} dy={index === 0 ? 0 : 20}>{line}</tspan>
+              ))}
+            </text>
+            {node.implementationLabel && (
+              <text class="architecture-node-implementation" x={node.width / 2} y={node.height - 12} text-anchor="middle">
+                {node.implementationLabel}
+              </text>
+            )}
+          </g>
+        ))}
+      </g>
+
+      <g class="architecture-legend" aria-hidden="true">
+        <line x1="30" y1="635" x2="90" y2="635" class="architecture-edge"></line>
+        <text x="100" y="640">primary data flow</text>
+        <line x1="260" y1="635" x2="320" y2="635" class="architecture-edge architecture-edge--auxiliary"></line>
+        <text x="330" y="640">simulator-provided ego motion</text>
+      </g>
+    </svg>
+  </div>
+
+  {!printMode && (
+    <figcaption class="architecture-caption">
+      <strong>Current boundary:</strong> depth is relative, occupancy projection is heuristic, and accumulated mapping uses
+      CARLA hero odometry rather than independently estimated ego motion.
+    </figcaption>
+  )}
+
+  {!compact && !printMode && (
+    <ol class="architecture-linear-summary" aria-label="Linear architecture summary">
+      {architectureSummary.map((step) => <li>{step}</li>)}
+    </ol>
+  )}
+</figure>

@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BadgeList from "../components/BadgeList.astro";
+import ContributionCard from "../components/ContributionCard.astro";
 import MediaPlaceholder from "../components/MediaPlaceholder.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import { personal } from "../data/personal";
-import { project, technologies, claims } from "../data/autonomousDriving";
+import { architectureSummary, claims, contributions, project, technologies } from "../data/autonomousDriving";
 
-const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 3);
+const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 4);
 ---
 
 <BaseLayout
@@ -44,8 +45,8 @@ const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 3);
       <div class="container">
         <SectionHeader
           eyebrow="Verified engineering scope"
-          title="More than a model demo"
-          description="The project connects model development, robotics integration and spatial reasoning in one modular ROS2 stack."
+          title="A complete prototype progression, not a single model demo"
+          description="The work connects model development, dataset engineering, ROS2 integration, relative-depth reasoning and local mapping."
         />
         <div class="evidence-grid">
           {verifiedClaims.map((claim) => (
@@ -59,7 +60,28 @@ const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 3);
       </div>
     </section>
 
-    <section class="section" id="profile">
+    <section class="section" id="system-scope">
+      <div class="container">
+        <SectionHeader
+          eyebrow="System scope"
+          title="Perception → fusion → occupancy → mapping"
+          description="Each transition is implemented as an explicit robotics subsystem with observable ROS2 interfaces."
+        />
+        <ol class="homepage-system-flow">
+          {architectureSummary.map((step, index) => (
+            <li>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <p>{step}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="homepage-contribution-grid">
+          {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-surface" id="profile">
       <div class="container profile-grid">
         <div>
           <SectionHeader
@@ -89,7 +111,7 @@ const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 3);
       <div class="container cta-panel">
         <div>
           <p class="eyebrow">Technical case study</p>
-          <h2>Inspect the architecture, development path and documented limitations.</h2>
+          <h2>Inspect the architecture, ROS2 interfaces, engineering methods and documented limitations.</h2>
         </div>
         <div class="button-row">
           <a class="button button-primary" href={project.caseStudyPath}>Explore the project</a>

@@ -1,18 +1,20 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ArchitectureDiagram from "../../../components/ArchitectureDiagram.astro";
 import BadgeList from "../../../components/BadgeList.astro";
 import ContributionCard from "../../../components/ContributionCard.astro";
+import DevelopmentTimeline from "../../../components/DevelopmentTimeline.astro";
 import MediaPlaceholder from "../../../components/MediaPlaceholder.astro";
+import RosTopicList from "../../../components/RosTopicList.astro";
 import SectionHeader from "../../../components/SectionHeader.astro";
+import TechnicalDetailGrid from "../../../components/TechnicalDetailGrid.astro";
 import {
-  architectureSummary,
   contributions,
   limitations,
   outputPlaceholders,
   project,
   roadmap,
   technologies,
-  timeline,
 } from "../../../data/autonomousDriving";
 ---
 
@@ -41,7 +43,9 @@ import {
     <nav class="section-nav" aria-label="Case-study sections">
       <div class="container">
         <a href="#architecture">Architecture</a>
+        <a href="#interfaces">ROS2 interfaces</a>
         <a href="#contributions">Contributions</a>
+        <a href="#methods">Methods</a>
         <a href="#development">Development</a>
         <a href="#outputs">Outputs</a>
         <a href="#limitations">Limitations</a>
@@ -52,28 +56,31 @@ import {
     <section class="section" id="architecture">
       <div class="container">
         <SectionHeader
-          eyebrow="System flow"
-          title="From CARLA RGB to a short-term local map"
-          description="Phase 3 will replace this structured foundation with the final accessible inline SVG."
+          eyebrow="System architecture"
+          title="From CARLA RGB to a short-term accumulated local map"
+          description="Primary data paths are solid. The dashed edge marks simulator-provided hero odometry, which will later be replaced by independently estimated ego motion."
         />
-        <div class="architecture-foundation">
-          <ol>
-            {architectureSummary.map((step) => <li>{step}</li>)}
-          </ol>
-          <div class="architecture-note">
-            <strong>Current ego motion</strong>
-            <p>Accumulated mapping uses simulator-provided CARLA hero odometry. Visual odometry remains future work.</p>
-          </div>
-        </div>
+        <ArchitectureDiagram />
       </div>
     </section>
 
-    <section class="section section-surface" id="contributions">
+    <section class="section section-surface" id="interfaces">
+      <div class="container">
+        <SectionHeader
+          eyebrow="Selected ROS2 interfaces"
+          title="Five topics that expose the core system transitions"
+          description="The case study highlights only the topics that best explain tracking, fusion, free space, occupancy and accumulated mapping."
+        />
+        <RosTopicList />
+      </div>
+    </section>
+
+    <section class="section" id="contributions">
       <div class="container">
         <SectionHeader
           eyebrow="Engineering contributions"
           title="Building the stack, not just running a model"
-          description="Four evidence-backed areas connect model development to robotics integration and mapping."
+          description="Four evidence-backed areas connect model development to robotics integration and spatial reasoning."
         />
         <div class="contribution-grid">
           {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
@@ -81,17 +88,25 @@ import {
       </div>
     </section>
 
+    <section class="section section-surface" id="methods">
+      <div class="container">
+        <SectionHeader
+          eyebrow="Technical implementation"
+          title="Inputs, methods, outputs and engineering boundaries"
+          description="The implementation uses explicit, inspectable methods rather than hiding the pipeline behind broad autonomy claims."
+        />
+        <TechnicalDetailGrid />
+      </div>
+    </section>
+
     <section class="section" id="development">
       <div class="container">
-        <SectionHeader eyebrow="Development trajectory" title="Eight verified phases of increasing system scope" />
-        <ol class="timeline">
-          {timeline.map((phase) => (
-            <li class:list={[phase.index === 7 && "timeline-current"]}>
-              <span>{String(phase.index).padStart(2, "0")}</span>
-              <strong>{phase.title}</strong>
-            </li>
-          ))}
-        </ol>
+        <SectionHeader
+          eyebrow="Development trajectory"
+          title="Eight verified phases of increasing system scope"
+          description="The sequence shows how model experimentation became an observable, modular ROS2 perception and local-mapping prototype."
+        />
+        <DevelopmentTimeline />
       </div>
     </section>
 
@@ -100,7 +115,7 @@ import {
         <SectionHeader
           eyebrow="Authentic evidence"
           title="System outputs"
-          description="The foundation uses honest placeholders until verified repository media is processed in Phase 4."
+          description="Phase 3 retains honest placeholders. Phase 4 will process and integrate verified repository media and static print frames."
         />
         <div class="output-grid">
           {outputPlaceholders.map((media) => (

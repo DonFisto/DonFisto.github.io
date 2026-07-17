@@ -1,18 +1,19 @@
 ---
 import PrintLayout from "../layouts/PrintLayout.astro";
+import ArchitectureDiagram from "../components/ArchitectureDiagram.astro";
 import PdfPage from "../components/PdfPage.astro";
 import MediaPlaceholder from "../components/MediaPlaceholder.astro";
 import ContributionCard from "../components/ContributionCard.astro";
+import DevelopmentTimeline from "../components/DevelopmentTimeline.astro";
+import RosTopicList from "../components/RosTopicList.astro";
 import { personal } from "../data/personal";
 import {
-  architectureSummary,
   contributions,
   limitations,
   outputPlaceholders,
   project,
   roadmap,
   technologies,
-  timeline,
 } from "../data/autonomousDriving";
 ---
 
@@ -34,20 +35,15 @@ import {
             <div><dt>Repository</dt><dd>github.com/DonFisto/vision-segmentation-autonomous-driving</dd></div>
           </dl>
         </div>
-        <MediaPlaceholder subsystem="Real CARLA project composite" instruction="Temporary Phase 2 print placeholder." />
+        <MediaPlaceholder subsystem="Real CARLA project composite" instruction="Temporary labelled print placeholder." />
       </div>
     </PdfPage>
 
     <PdfPage number={2} title="System architecture">
       <p class="eyebrow">System architecture</p>
-      <h2>From camera frames to a short-term local map</h2>
-      <ol class="pdf-flow">
-        {architectureSummary.map((step) => <li>{step}</li>)}
-      </ol>
-      <aside class="pdf-callout">
-        <strong>Odometry boundary</strong>
-        <p>Current accumulation uses simulator-provided hero odometry; visual odometry is future work.</p>
-      </aside>
+      <h2>From camera frames to a short-term accumulated local map</h2>
+      <ArchitectureDiagram compact printMode />
+      <RosTopicList compact />
     </PdfPage>
 
     <PdfPage number={3} title="Engineering contributions">
@@ -56,9 +52,7 @@ import {
       <div class="pdf-contribution-grid">
         {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
       </div>
-      <ol class="pdf-timeline">
-        {timeline.map((phase) => <li><span>{phase.index}</span>{phase.title}</li>)}
-      </ol>
+      <DevelopmentTimeline compact />
     </PdfPage>
 
     <PdfPage number={4} title="Outputs, limitations and roadmap">
@@ -72,7 +66,7 @@ import {
         <div>
           <h2>Current limitations</h2>
           <ul class="pdf-limitations">
-            {limitations.slice(0, 4).map((limitation) => <li>{limitation}</li>)}
+            {limitations.slice(0, 5).map((limitation) => <li>{limitation}</li>)}
           </ul>
         </div>
         <div>
