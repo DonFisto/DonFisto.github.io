@@ -1,0 +1,16 @@
+---
+import { personal } from "../data/personal";
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <strong>{personal.name}</strong>
+      <p>{personal.positioning}</p>
+    </div>
+    <div class="footer-links">
+      <a href={`mailto:${personal.email}`}>{personal.email}</a>
+      <a href={personal.githubProfile} target="_blank" rel="noreferrer">github.com/DonFisto</a>
+    </div>
+  </div>
+</footer>

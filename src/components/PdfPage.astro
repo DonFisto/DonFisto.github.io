@@ -1,0 +1,18 @@
+---
+interface Props {
+  number: number;
+  title: string;
+}
+
+const { number, title } = Astro.props;
+---
+
+<section class="pdf-page" data-page={number} aria-label={`Page ${number}: ${title}`}>
+  <header class="pdf-page-header">
+    <span>Daniel Martínez-Cabeza de Vaca Guillén</span>
+    <span>{String(number).padStart(2, "0")} / 04</span>
+  </header>
+  <div class="pdf-page-content">
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+import PrintLayout from "../layouts/PrintLayout.astro";
+import PdfPage from "../components/PdfPage.astro";
+import MediaPlaceholder from "../components/MediaPlaceholder.astro";
+import ContributionCard from "../components/ContributionCard.astro";
+import { personal } from "../data/personal";
+import {
+  architectureSummary,
+  contributions,
+  limitations,
+  outputPlaceholders,
+  project,
+  roadmap,
+  technologies,
+  timeline,
+} from "../data/autonomousDriving";
+---
+
+<PrintLayout title={`${project.title} — A4 portfolio preview`}>
+  <main class="pdf-document" aria-label="Four-page robotics portfolio preview">
+    <PdfPage number={1} title="Project overview">
+      <div class="pdf-hero-grid">
+        <div>
+          <p class="eyebrow">Engineering portfolio</p>
+          <h1>{project.title}</h1>
+          <p class="pdf-lead">{project.summary}</p>
+          <p class="ownership">{project.ownership}</p>
+          <ul class="pdf-badges">
+            {technologies.slice(0, 8).map((technology) => <li>{technology.name}</li>)}
+          </ul>
+          <dl class="pdf-meta">
+            <div><dt>Engineer</dt><dd>{personal.name}</dd></div>
+            <div><dt>Education</dt><dd>{personal.academicProfile}</dd></div>
+            <div><dt>Repository</dt><dd>github.com/DonFisto/vision-segmentation-autonomous-driving</dd></div>
+          </dl>
+        </div>
+        <MediaPlaceholder subsystem="Real CARLA project composite" instruction="Temporary Phase 2 print placeholder." />
+      </div>
+    </PdfPage>
+
+    <PdfPage number={2} title="System architecture">
+      <p class="eyebrow">System architecture</p>
+      <h2>From camera frames to a short-term local map</h2>
+      <ol class="pdf-flow">
+        {architectureSummary.map((step) => <li>{step}</li>)}
+      </ol>
+      <aside class="pdf-callout">
+        <strong>Odometry boundary</strong>
+        <p>Current accumulation uses simulator-provided hero odometry; visual odometry is future work.</p>
+      </aside>
+    </PdfPage>
+
+    <PdfPage number={3} title="Engineering contributions">
+      <p class="eyebrow">Engineering contributions</p>
+      <h2>Building the stack, not just running a model</h2>
+      <div class="pdf-contribution-grid">
+        {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
+      </div>
+      <ol class="pdf-timeline">
+        {timeline.map((phase) => <li><span>{phase.index}</span>{phase.title}</li>)}
+      </ol>
+    </PdfPage>
+
+    <PdfPage number={4} title="Outputs, limitations and roadmap">
+      <p class="eyebrow">System outputs — and what comes next</p>
+      <div class="pdf-output-grid">
+        {outputPlaceholders.map((media) => (
+          <MediaPlaceholder subsystem={media.subsystem} instruction="Temporary labelled placeholder." compact />
+        ))}
+      </div>
+      <div class="pdf-bottom-grid">
+        <div>
+          <h2>Current limitations</h2>
+          <ul class="pdf-limitations">
+            {limitations.slice(0, 4).map((limitation) => <li>{limitation}</li>)}
+          </ul>
+        </div>
+        <div>
+          <h2>Roadmap</h2>
+          <ol class="pdf-roadmap">
+            {roadmap.map((item) => <li><span>{item.index}</span><strong>{item.title}</strong></li>)}
+          </ol>
+        </div>
+      </div>
+    </PdfPage>
+  </main>
+</PrintLayout>

@@ -1,0 +1,19 @@
+---
+import type { Contribution } from "../data/types";
+
+interface Props {
+  contribution: Contribution;
+}
+
+const { contribution } = Astro.props;
+---
+
+<article class={`contribution-card accent-${contribution.accent}`}>
+  <div class="card-heading">
+    <h3>{contribution.title}</h3>
+    <span>{contribution.badge}</span>
+  </div>
+  <ul>
+    {contribution.bullets.map((bullet) => <li>{bullet}</li>)}
+  </ul>
+</article>

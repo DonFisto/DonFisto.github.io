@@ -1,0 +1,149 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BadgeList from "../../../components/BadgeList.astro";
+import ContributionCard from "../../../components/ContributionCard.astro";
+import MediaPlaceholder from "../../../components/MediaPlaceholder.astro";
+import SectionHeader from "../../../components/SectionHeader.astro";
+import {
+  architectureSummary,
+  contributions,
+  limitations,
+  outputPlaceholders,
+  project,
+  roadmap,
+  technologies,
+  timeline,
+} from "../../../data/autonomousDriving";
+---
+
+<BaseLayout title={`${project.title} | Daniel Martínez-Cabeza de Vaca Guillén`} description={project.summary}>
+  <main id="main-content">
+    <section class="project-hero">
+      <div class="container project-hero-grid">
+        <div>
+          <p class="eyebrow">Engineering case study</p>
+          <h1>{project.title}</h1>
+          <p class="hero-summary">{project.summary}</p>
+          <p class="ownership">{project.ownership}</p>
+          <div class="button-row">
+            <a class="button button-primary" href={project.repository} target="_blank" rel="noreferrer">Repository</a>
+            <a class="button button-secondary" href="#architecture">System architecture</a>
+          </div>
+          <BadgeList items={technologies.map((technology) => technology.name)} />
+        </div>
+        <MediaPlaceholder
+          subsystem="Authentic CARLA project composite"
+          instruction="Replace with a verified poster from AD_Project_Demo.gif during Phase 4."
+        />
+      </div>
+    </section>
+
+    <nav class="section-nav" aria-label="Case-study sections">
+      <div class="container">
+        <a href="#architecture">Architecture</a>
+        <a href="#contributions">Contributions</a>
+        <a href="#development">Development</a>
+        <a href="#outputs">Outputs</a>
+        <a href="#limitations">Limitations</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+    </nav>
+
+    <section class="section" id="architecture">
+      <div class="container">
+        <SectionHeader
+          eyebrow="System flow"
+          title="From CARLA RGB to a short-term local map"
+          description="Phase 3 will replace this structured foundation with the final accessible inline SVG."
+        />
+        <div class="architecture-foundation">
+          <ol>
+            {architectureSummary.map((step) => <li>{step}</li>)}
+          </ol>
+          <div class="architecture-note">
+            <strong>Current ego motion</strong>
+            <p>Accumulated mapping uses simulator-provided CARLA hero odometry. Visual odometry remains future work.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-surface" id="contributions">
+      <div class="container">
+        <SectionHeader
+          eyebrow="Engineering contributions"
+          title="Building the stack, not just running a model"
+          description="Four evidence-backed areas connect model development to robotics integration and mapping."
+        />
+        <div class="contribution-grid">
+          {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="development">
+      <div class="container">
+        <SectionHeader eyebrow="Development trajectory" title="Eight verified phases of increasing system scope" />
+        <ol class="timeline">
+          {timeline.map((phase) => (
+            <li class:list={[phase.index === 7 && "timeline-current"]}>
+              <span>{String(phase.index).padStart(2, "0")}</span>
+              <strong>{phase.title}</strong>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-surface" id="outputs">
+      <div class="container">
+        <SectionHeader
+          eyebrow="Authentic evidence"
+          title="System outputs"
+          description="The foundation uses honest placeholders until verified repository media is processed in Phase 4."
+        />
+        <div class="output-grid">
+          {outputPlaceholders.map((media) => (
+            <article class="output-card">
+              <MediaPlaceholder subsystem={media.subsystem} instruction={media.requiredCapture} compact />
+              <h3>{media.subsystem}</h3>
+              <p>{media.requiredCapture}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="limitations">
+      <div class="container split-layout">
+        <div>
+          <SectionHeader eyebrow="Current limitations" title="Clear boundaries increase technical credibility" />
+          <ul class="limitation-list">
+            {limitations.map((limitation) => <li>{limitation}</li>)}
+          </ul>
+        </div>
+        <div id="roadmap">
+          <SectionHeader eyebrow="Roadmap" title="The next engineering transitions" />
+          <ol class="roadmap-list">
+            {roadmap.map((item) => (
+              <li class:list={[item.featured && "roadmap-featured"]}>
+                <span>{item.index}</span>
+                <div><strong>{item.title}</strong><p>{item.description}</p></div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-cta">
+      <div class="container cta-panel">
+        <div>
+          <p class="eyebrow">Source and documentation</p>
+          <h2>Inspect the implementation, runbook and milestone records.</h2>
+        </div>
+        <a class="button button-primary" href={project.repository} target="_blank" rel="noreferrer">Open GitHub repository</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

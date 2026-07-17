@@ -1,0 +1,18 @@
+---
+interface Props {
+  subsystem: string;
+  instruction: string;
+  compact?: boolean;
+}
+
+const { subsystem, instruction, compact = false } = Astro.props;
+---
+
+<div class:list={["media-placeholder", compact && "media-placeholder--compact"]} role="img" aria-label={`Placeholder for ${subsystem}`}>
+  <div class="placeholder-grid" aria-hidden="true"></div>
+  <div class="placeholder-copy">
+    <span>PROJECT OUTPUT NEEDED</span>
+    <strong>{subsystem}</strong>
+    <p>{instruction}</p>
+  </div>
+</div>

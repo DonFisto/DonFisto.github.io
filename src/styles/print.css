@@ -1,0 +1,273 @@
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+.print-document,
+.print-body {
+  margin: 0;
+  padding: 0;
+  color-scheme: dark;
+  background: #07111f;
+}
+
+.pdf-document {
+  margin: 0;
+}
+
+.pdf-page {
+  width: 297mm;
+  height: 210mm;
+  overflow: hidden;
+  break-after: page;
+  page-break-after: always;
+  padding: 10mm 12mm 11mm;
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 80% 0%, rgba(85, 230, 209, 0.09), transparent 75mm),
+    var(--color-bg);
+}
+
+.pdf-page:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+.pdf-page-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 3mm;
+  border-bottom: 0.3mm solid var(--color-border);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  text-transform: uppercase;
+}
+
+.pdf-page-content {
+  height: calc(100% - 8mm);
+  padding-top: 7mm;
+}
+
+.pdf-page h1 {
+  max-width: 11ch;
+  margin-bottom: 5mm;
+  font-size: 32pt;
+}
+
+.pdf-page h2 {
+  margin-bottom: 4mm;
+  font-size: 20pt;
+}
+
+.pdf-page h3 {
+  font-size: 11pt;
+}
+
+.pdf-hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 10mm;
+  align-items: center;
+  height: 100%;
+}
+
+.pdf-lead {
+  max-width: 75ch;
+  color: var(--color-text-muted);
+  font-size: 11pt;
+}
+
+.pdf-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin: 4mm 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-meta {
+  display: grid;
+  gap: 1.5mm;
+  margin: 4mm 0 0;
+  font-size: 8.5pt;
+}
+
+.pdf-meta div {
+  display: grid;
+  grid-template-columns: 24mm 1fr;
+}
+
+.pdf-meta dt {
+  color: var(--color-text-muted);
+}
+
+.pdf-meta dd {
+  margin: 0;
+}
+
+.pdf-page .media-placeholder {
+  min-height: 95mm;
+}
+
+.pdf-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4mm;
+  margin: 8mm 0;
+  padding: 0;
+  counter-reset: flow;
+  list-style: none;
+}
+
+.pdf-flow li {
+  min-height: 35mm;
+  padding: 5mm;
+  border: 0.3mm solid var(--color-border);
+  border-top: 1mm solid var(--color-data);
+  border-radius: 2mm;
+  color: var(--color-text-muted);
+  background: var(--color-bg-raised);
+  font-family: var(--font-mono);
+  font-size: 8pt;
+}
+
+.pdf-callout {
+  display: grid;
+  grid-template-columns: 35mm 1fr;
+  gap: 5mm;
+  padding: 4mm;
+  border: 0.3mm dashed var(--color-navigation);
+  font-size: 9pt;
+}
+
+.pdf-callout p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.pdf-contribution-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3mm;
+}
+
+.pdf-contribution-grid .contribution-card {
+  padding: 4mm;
+  font-size: 7.7pt;
+}
+
+.pdf-contribution-grid .card-heading {
+  display: block;
+}
+
+.pdf-contribution-grid .card-heading span {
+  display: inline-block;
+  margin-bottom: 2mm;
+}
+
+.pdf-timeline {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1.5mm;
+  margin: 6mm 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-timeline li {
+  min-height: 23mm;
+  padding: 2.5mm;
+  border: 0.3mm solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 6.8pt;
+}
+
+.pdf-timeline span {
+  display: block;
+  margin-bottom: 1.5mm;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+.pdf-output-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3mm;
+}
+
+.pdf-output-grid .media-placeholder {
+  min-height: 54mm;
+}
+
+.pdf-output-grid .placeholder-copy {
+  padding: 4mm;
+}
+
+.pdf-output-grid .placeholder-copy strong {
+  font-size: 9pt;
+}
+
+.pdf-output-grid .placeholder-copy p {
+  font-size: 6.8pt;
+}
+
+.pdf-bottom-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 8mm;
+  margin-top: 5mm;
+}
+
+.pdf-bottom-grid h2 {
+  font-size: 13pt;
+}
+
+.pdf-limitations,
+.pdf-roadmap {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-limitations li,
+.pdf-roadmap li {
+  padding: 2.5mm;
+  border: 0.3mm solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 7.2pt;
+}
+
+.pdf-roadmap li {
+  display: grid;
+  grid-template-columns: 8mm 1fr;
+  align-items: center;
+}
+
+.pdf-roadmap span {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+@media screen {
+  .print-body {
+    padding: 1.5rem;
+  }
+
+  .pdf-page {
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+    transform-origin: top center;
+  }
+}
+
+@media print {
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

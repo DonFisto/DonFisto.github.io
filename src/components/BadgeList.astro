@@ -1,0 +1,12 @@
+---
+interface Props {
+  items: readonly string[];
+  label?: string;
+}
+
+const { items, label = "Technologies" } = Astro.props;
+---
+
+<ul class="badge-list" aria-label={label}>
+  {items.map((item) => <li>{item}</li>)}
+</ul>
