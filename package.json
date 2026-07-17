@@ -12,7 +12,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "verify": "node scripts/verify-foundation.mjs",
-    "validate": "npm run check && npm run build && npm run verify"
+    "validate": "npm run check && npm run build && npm run verify",
+    "media:metadata": "node scripts/generate-media-metadata.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",

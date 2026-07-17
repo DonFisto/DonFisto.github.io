@@ -1,0 +1,95 @@
+---
+import type { ProjectMedia } from "../data/types";
+import { mediaMetadata } from "../data/generatedMedia";
+
+interface Props {
+  media: ProjectMedia;
+  compact?: boolean;
+  printMode?: boolean;
+  priority?: boolean;
+}
+
+const {
+  media,
+  compact = false,
+  printMode = false,
+  priority = false,
+} = Astro.props;
+
+const metadata = mediaMetadata[media.metadataKey];
+const loading = priority ? "eager" : "lazy";
+const fetchpriority = priority ? "high" : undefined;
+const staticSource = media.poster ?? media.printSrc;
+---
+
+<figure
+  class:list={[
+    "evidence-media",
+    compact && "evidence-media--compact",
+    printMode && "evidence-media--print",
+  ]}
+  data-evidence-media={media.id}
+  data-media-kind={media.kind}
+>
+  <div class="evidence-media__frame">
+    {
+      media.kind === "animation" && !printMode ? (
+        <>
+          <img
+            class="evidence-media__visual evidence-media__animated"
+            src={media.src}
+            alt={media.alt}
+            width={metadata?.width}
+            height={metadata?.height}
+            loading={loading}
+            decoding="async"
+            fetchpriority={fetchpriority}
+          />
+          <img
+            class="evidence-media__visual evidence-media__static"
+            src={staticSource}
+            alt={media.alt}
+            width={metadata?.width}
+            height={metadata?.height}
+            loading={loading}
+            decoding="async"
+          />
+          <span class="evidence-media__badge">Animated project output</span>
+        </>
+      ) : media.webpSrc && !printMode ? (
+        <picture>
+          <source srcset={media.webpSrc} type="image/webp" />
+          <img
+            class="evidence-media__visual"
+            src={media.src}
+            alt={media.alt}
+            width={metadata?.width}
+            height={metadata?.height}
+            loading={loading}
+            decoding="async"
+            fetchpriority={fetchpriority}
+          />
+        </picture>
+      ) : (
+        <img
+          class="evidence-media__visual"
+          src={printMode ? media.printSrc : media.src}
+          alt={media.alt}
+          width={metadata?.width}
+          height={metadata?.height}
+          loading={loading}
+          decoding="async"
+          fetchpriority={fetchpriority}
+        />
+      )
+    }
+  </div>
+  <figcaption>
+    <div class="evidence-media__heading">
+      <strong>{media.title}</strong>
+      <span>{media.subsystem}</span>
+    </div>
+    <p>{media.caption}</p>
+    {media.caveat && <small>{media.caveat}</small>}
+  </figcaption>
+</figure>

@@ -2,10 +2,17 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BadgeList from "../components/BadgeList.astro";
 import ContributionCard from "../components/ContributionCard.astro";
-import MediaPlaceholder from "../components/MediaPlaceholder.astro";
+import EvidenceMedia from "../components/EvidenceMedia.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import { personal } from "../data/personal";
-import { architectureSummary, claims, contributions, project, technologies } from "../data/autonomousDriving";
+import {
+  architectureSummary,
+  claims,
+  contributions,
+  heroMedia,
+  project,
+  technologies,
+} from "../data/autonomousDriving";
 
 const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 4);
 ---
@@ -30,10 +37,7 @@ const verifiedClaims = claims.filter((claim) => claim.publishable).slice(0, 4);
           <BadgeList items={technologies.slice(0, 7).map((technology) => technology.name)} />
         </div>
         <div class="hero-visual">
-          <MediaPlaceholder
-            subsystem="CARLA perception-to-mapping composite"
-            instruction="Phase 4 will replace this frame with an optimized poster from the verified project demonstration."
-          />
+          <EvidenceMedia media={heroMedia} priority />
           <div class="signal-strip" aria-label="Project stages">
             <span>Perception</span><span>Fusion</span><span>Occupancy</span><span>Mapping</span>
           </div>

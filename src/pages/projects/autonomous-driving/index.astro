@@ -4,14 +4,17 @@ import ArchitectureDiagram from "../../../components/ArchitectureDiagram.astro";
 import BadgeList from "../../../components/BadgeList.astro";
 import ContributionCard from "../../../components/ContributionCard.astro";
 import DevelopmentTimeline from "../../../components/DevelopmentTimeline.astro";
+import EvidenceMedia from "../../../components/EvidenceMedia.astro";
 import MediaPlaceholder from "../../../components/MediaPlaceholder.astro";
 import RosTopicList from "../../../components/RosTopicList.astro";
 import SectionHeader from "../../../components/SectionHeader.astro";
 import TechnicalDetailGrid from "../../../components/TechnicalDetailGrid.astro";
 import {
+  authenticMedia,
   contributions,
+  heroMedia,
   limitations,
-  outputPlaceholders,
+  pendingMedia,
   project,
   roadmap,
   technologies,
@@ -33,10 +36,7 @@ import {
           </div>
           <BadgeList items={technologies.map((technology) => technology.name)} />
         </div>
-        <MediaPlaceholder
-          subsystem="Authentic CARLA project composite"
-          instruction="Replace with a verified poster from AD_Project_Demo.gif during Phase 4."
-        />
+        <EvidenceMedia media={heroMedia} priority />
       </div>
     </section>
 
@@ -114,36 +114,60 @@ import {
       <div class="container">
         <SectionHeader
           eyebrow="Authentic evidence"
-          title="System outputs"
-          description="Phase 3 retains honest placeholders. Phase 4 will process and integrate verified repository media and static print frames."
+          title="Repository outputs, shown with their engineering caveats"
+          description="Animations remain available on the web, while static frames are used for reduced-motion preferences and print."
         />
-        <div class="output-grid">
-          {outputPlaceholders.map((media) => (
-            <article class="output-card">
+        <div class="output-grid output-grid--authentic">
+          {authenticMedia.map((media) => <EvidenceMedia media={media} />)}
+        </div>
+
+        <div class="pending-evidence">
+          <div>
+            <p class="eyebrow">Additional captures planned</p>
+            <h3>Documented subsystems without a dedicated portfolio frame</h3>
+            <p>These placeholders identify evidence still worth capturing; they do not represent fabricated output.</p>
+          </div>
+          <div class="pending-evidence-grid">
+            {pendingMedia.map((media) => (
               <MediaPlaceholder subsystem={media.subsystem} instruction={media.requiredCapture} compact />
-              <h3>{media.subsystem}</h3>
-              <p>{media.requiredCapture}</p>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
 
     <section class="section" id="limitations">
-      <div class="container split-layout">
+      <div class="container split-layout engineering-boundaries">
         <div>
-          <SectionHeader eyebrow="Current limitations" title="Clear boundaries increase technical credibility" />
-          <ul class="limitation-list">
-            {limitations.map((limitation) => <li>{limitation}</li>)}
+          <SectionHeader
+            eyebrow="Current limitations"
+            title="Clear boundaries increase technical credibility"
+            description="Each limitation describes a real implementation boundary rather than hiding it behind broad autonomy language."
+          />
+          <ul class="limitation-list limitation-list--detailed">
+            {limitations.map((limitation) => (
+              <li data-limitation={limitation.id}>
+                <strong>{limitation.title}</strong>
+                <p>{limitation.description}</p>
+              </li>
+            ))}
           </ul>
         </div>
         <div id="roadmap">
-          <SectionHeader eyebrow="Roadmap" title="The next engineering transitions" />
+          <SectionHeader
+            eyebrow="Planned work"
+            title="The next engineering transitions"
+            description="Roadmap stages are deliberately styled as future work, not completed functionality."
+          />
           <ol class="roadmap-list">
             {roadmap.map((item) => (
-              <li class:list={[item.featured && "roadmap-featured"]}>
+              <li class:list={[item.featured && "roadmap-featured"]} data-roadmap-status={item.status}>
                 <span>{item.index}</span>
-                <div><strong>{item.title}</strong><p>{item.description}</p></div>
+                <div>
+                  <small>{item.status}</small>
+                  <strong>{item.title}</strong>
+                  <p>{item.description}</p>
+                </div>
               </li>
             ))}
           </ol>

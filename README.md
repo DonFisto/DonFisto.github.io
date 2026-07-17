@@ -70,3 +70,19 @@ The source now includes the verified technical narrative:
 - eight-phase development trajectory.
 
 Authentic repository media remains scheduled for Phase 4. The legacy root `index.html` is still intentionally preserved and remains the branch-root deployment entry point.
+
+
+## Phase 4 status
+
+Authentic repository media is now integrated into the Astro source:
+
+- live CARLA perception demonstration;
+- semantic segmentation overlay;
+- semantic object extraction and tracking overlay;
+- local occupancy and accumulated mapping demonstration;
+- static poster frames for print and reduced-motion preferences;
+- generated media dimensions and provenance-aware captions.
+
+The print route now uses only static authentic media. Two honest web placeholders remain for dedicated depth/fusion and free-space/occupancy captures that are documented in code but not yet available as separate portfolio assets.
+
+The legacy root `index.html` remains intentionally preserved until Phase 5 deployment.

@@ -3,8 +3,11 @@ import type {
   ArchitectureGroup,
   ArchitectureNode,
   Contribution,
+  Limitation,
   PlaceholderMedia,
+  ProjectMedia,
   PublishableClaim,
+  RoadmapItem,
   RosTopic,
   TechnicalDetail,
   Technology,
@@ -402,53 +405,132 @@ export const technicalDetails: TechnicalDetail[] = [
   },
 ];
 
-export const limitations = [
-  "Depth is relative, not metric.",
-  "Bounding-box fusion can include background pixels.",
-  "Accumulated mapping uses simulator-provided odometry.",
-  "The accumulated representation is not a complete SLAM system.",
-  "Image-to-ground occupancy projection remains heuristic.",
-] as const;
+export const heroMedia: ProjectMedia = {
+  id: "project-demo",
+  title: "Live perception stack",
+  subsystem: "CARLA perception-to-mapping overview",
+  kind: "animation",
+  src: "/media/autonomous-driving/project-demo.gif",
+  poster: "/media/autonomous-driving/project-demo-poster.png",
+  printSrc: "/media/autonomous-driving/project-demo-poster.png",
+  metadataKey: "projectDemo",
+  alt: "CARLA urban-driving scene with live outputs from Daniel's modular ROS2 perception stack.",
+  caption: "Live CARLA demonstration of the modular perception pipeline.",
+  caveat: "The animation demonstrates the prototype workflow; it is not a performance benchmark.",
+  sourceRepositoryPath: "assets/AD_Project_Demo.gif",
+};
 
-export const roadmap = [
+export const authenticMedia: ProjectMedia[] = [
+  {
+    id: "semantic-segmentation",
+    title: "Semantic segmentation",
+    subsystem: "SegFormer-B0 · Cityscapes-19",
+    kind: "image",
+    src: "/media/autonomous-driving/segmentation-overlay.png",
+    webpSrc: "/media/autonomous-driving/segmentation-overlay.webp",
+    printSrc: "/media/autonomous-driving/segmentation-overlay.png",
+    metadataKey: "segmentationOverlay",
+    alt: "CARLA urban scene with a Cityscapes-19 semantic segmentation overlay.",
+    caption: "Cityscapes-19 scene parsing using SegFormer-B0, trained and refined for CARLA urban scenes.",
+    caveat: "No numerical accuracy claim is inferred from this qualitative output.",
+    sourceRepositoryPath: "assets/demo_overlay.png",
+  },
+  {
+    id: "object-extraction-tracking",
+    title: "Object extraction and tracking",
+    subsystem: "Semantic components · IoU association",
+    kind: "image",
+    src: "/media/autonomous-driving/tracking-overlay.png",
+    webpSrc: "/media/autonomous-driving/tracking-overlay.webp",
+    printSrc: "/media/autonomous-driving/tracking-overlay.png",
+    metadataKey: "trackingOverlay",
+    alt: "CARLA scene with semantic segmentation, extracted object boxes and temporal tracking overlays.",
+    caption: "Selected semantic classes are converted into object boxes and associated over time using class-consistent IoU tracking.",
+    caveat: "The boxes originate from semantic-mask processing, not a separate learned object detector.",
+    sourceRepositoryPath: "assets/Segmentatation+Overlay+Tracking.png",
+  },
+  {
+    id: "mapping-demo",
+    title: "Local occupancy and accumulated mapping",
+    subsystem: "Occupancy layers · CARLA hero odometry",
+    kind: "animation",
+    src: "/media/autonomous-driving/mapping-demo.gif",
+    poster: "/media/autonomous-driving/mapping-demo-poster.png",
+    printSrc: "/media/autonomous-driving/mapping-demo-poster.png",
+    metadataKey: "mappingDemo",
+    alt: "Animated CARLA demonstration of local occupancy and short-term accumulated mapping.",
+    caption: "Semantic occupancy evidence is accumulated in world coordinates using simulator-provided hero odometry.",
+    caveat: "The accumulated representation is a short-term prototype, not a complete SLAM system.",
+    sourceRepositoryPath: "assets/AD_Mapping_Demo.gif",
+  },
+];
+
+export const printMedia = authenticMedia;
+
+export const pendingMedia: PlaceholderMedia[] = [
+  {
+    id: "relative-depth-fusion",
+    subsystem: "Relative depth + object fusion",
+    requiredCapture: "Add a verified frame showing tracked IDs beside relative-depth statistics.",
+    alt: "Placeholder for a future authentic relative-depth and object-fusion capture.",
+  },
+  {
+    id: "free-space-occupancy",
+    subsystem: "Free-space + local occupancy layers",
+    requiredCapture: "Add a dedicated frame that preserves free-space, static, dynamic and unknown-layer legends.",
+    alt: "Placeholder for a future authentic free-space and local-occupancy capture.",
+  },
+];
+
+export const limitations: Limitation[] = [
+  {
+    id: "relative-depth",
+    title: "Relative rather than metric depth",
+    description: "Depth Anything V2 supports ordering and relative comparison, but the current values are not calibrated distances in metres.",
+  },
+  {
+    id: "box-fusion",
+    title: "Bounding-box depth contamination",
+    description: "Whole-box statistics can include background or occluding pixels around an object.",
+  },
+  {
+    id: "projection",
+    title: "Heuristic ground projection",
+    description: "Local occupancy is derived through an approximate image-to-ground projection rather than calibrated metric 3D reconstruction.",
+  },
+  {
+    id: "simulator-odometry",
+    title: "Simulator-provided ego motion",
+    description: "Accumulated mapping currently depends on CARLA hero odometry instead of an independently estimated visual-odometry signal.",
+  },
+  {
+    id: "not-slam",
+    title: "Not a complete SLAM system",
+    description: "The fixed-origin short-term map does not yet include loop closure, pose-graph optimization or long-term map management.",
+  },
+];
+
+export const roadmap: RoadmapItem[] = [
   {
     index: "01",
     title: "Improve local mapping",
-    description: "Rolling maps, timestamp-aware integration and improved ground projection.",
+    description: "Introduce rolling maps, timestamp-aware integration and improved or calibrated ground projection.",
     featured: false,
+    status: "planned",
   },
   {
     index: "02",
     title: "Replace simulator ego motion",
-    description: "Introduce visual odometry and evaluate drift and temporal alignment.",
+    description: "Introduce visual odometry and evaluate drift, robustness and temporal alignment against CARLA ground truth.",
     featured: true,
+    status: "planned",
   },
   {
     index: "03",
     title: "Map-based navigation",
-    description: "Plan with accumulated occupancy and improve static/dynamic obstacle handling.",
+    description: "Use accumulated occupancy for planning and improve treatment of static and dynamic obstacles.",
     featured: false,
-  },
-] as const;
-
-export const outputPlaceholders: PlaceholderMedia[] = [
-  {
-    id: "segmentation",
-    subsystem: "Semantic segmentation",
-    requiredCapture: "Replace with the verified CARLA segmentation overlay during Phase 4.",
-    alt: "Placeholder for authentic semantic segmentation output.",
-  },
-  {
-    id: "tracking-depth",
-    subsystem: "Tracking + depth fusion",
-    requiredCapture: "Replace with an authentic tracking and relative-depth fusion capture.",
-    alt: "Placeholder for authentic tracking and relative-depth fusion output.",
-  },
-  {
-    id: "mapping",
-    subsystem: "Local occupancy & mapping",
-    requiredCapture: "Replace with a static frame from the verified mapping demonstration.",
-    alt: "Placeholder for authentic local occupancy and accumulated mapping output.",
+    status: "planned",
   },
 ];
 

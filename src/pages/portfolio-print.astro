@@ -2,15 +2,16 @@
 import PrintLayout from "../layouts/PrintLayout.astro";
 import ArchitectureDiagram from "../components/ArchitectureDiagram.astro";
 import PdfPage from "../components/PdfPage.astro";
-import MediaPlaceholder from "../components/MediaPlaceholder.astro";
+import EvidenceMedia from "../components/EvidenceMedia.astro";
 import ContributionCard from "../components/ContributionCard.astro";
 import DevelopmentTimeline from "../components/DevelopmentTimeline.astro";
 import RosTopicList from "../components/RosTopicList.astro";
 import { personal } from "../data/personal";
 import {
   contributions,
+  heroMedia,
   limitations,
-  outputPlaceholders,
+  printMedia,
   project,
   roadmap,
   technologies,
@@ -35,7 +36,7 @@ import {
             <div><dt>Repository</dt><dd>github.com/DonFisto/vision-segmentation-autonomous-driving</dd></div>
           </dl>
         </div>
-        <MediaPlaceholder subsystem="Real CARLA project composite" instruction="Temporary labelled print placeholder." />
+        <EvidenceMedia media={heroMedia} printMode priority />
       </div>
     </PdfPage>
 
@@ -56,23 +57,25 @@ import {
     </PdfPage>
 
     <PdfPage number={4} title="Outputs, limitations and roadmap">
-      <p class="eyebrow">System outputs — and what comes next</p>
+      <p class="eyebrow">Authentic outputs — and what comes next</p>
       <div class="pdf-output-grid">
-        {outputPlaceholders.map((media) => (
-          <MediaPlaceholder subsystem={media.subsystem} instruction="Temporary labelled placeholder." compact />
-        ))}
+        {printMedia.map((media) => <EvidenceMedia media={media} compact printMode />)}
       </div>
       <div class="pdf-bottom-grid">
         <div>
           <h2>Current limitations</h2>
           <ul class="pdf-limitations">
-            {limitations.slice(0, 5).map((limitation) => <li>{limitation}</li>)}
+            {limitations.map((limitation) => (
+              <li><strong>{limitation.title}</strong><span>{limitation.description}</span></li>
+            ))}
           </ul>
         </div>
         <div>
           <h2>Roadmap</h2>
           <ol class="pdf-roadmap">
-            {roadmap.map((item) => <li><span>{item.index}</span><strong>{item.title}</strong></li>)}
+            {roadmap.map((item) => (
+              <li><span>{item.index}</span><div><small>{item.status}</small><strong>{item.title}</strong></div></li>
+            ))}
           </ol>
         </div>
       </div>

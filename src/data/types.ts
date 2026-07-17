@@ -53,6 +53,44 @@ export interface PlaceholderMedia {
   alt: string;
 }
 
+export type MediaKind = "image" | "animation";
+
+export interface ProjectMedia {
+  id: string;
+  title: string;
+  subsystem: string;
+  kind: MediaKind;
+  src: string;
+  webpSrc?: string;
+  poster?: string;
+  printSrc: string;
+  metadataKey: string;
+  alt: string;
+  caption: string;
+  caveat?: string;
+  sourceRepositoryPath: string;
+}
+
+export interface GeneratedMediaMetadata {
+  width: number;
+  height: number;
+  sizeBytes: number;
+}
+
+export interface Limitation {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface RoadmapItem {
+  index: string;
+  title: string;
+  description: string;
+  featured: boolean;
+  status: "planned";
+}
+
 export interface ArchitectureNode {
   id: string;
   labelLines: string[];
