@@ -1,0 +1,64 @@
+name: Apply Phase 2 Astro foundation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f phase2-astro-foundation-payload.zip
+
+          if unzip -Z1 phase2-astro-foundation-payload.zip | grep -qx 'index.html'; then
+            echo 'Refusing to overwrite the currently deployed root index.html.' >&2
+            exit 1
+          fi
+
+      - name: Extract Phase 2 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -o phase2-astro-foundation-payload.zip -d .
+          rm phase2-astro-foundation-payload.zip
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate Astro foundation
+        run: npm run validate
+
+      - name: Commit Phase 2 source
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+
+          git commit -m 'Add Phase 2 Astro portfolio foundation'
+          git push
