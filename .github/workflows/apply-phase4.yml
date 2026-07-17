@@ -1,0 +1,165 @@
+name: Apply Phase 4 authentic media integration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify Phase 3 foundation and Phase 4 payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f index.html
+          test -f package.json
+          test -f package-lock.json
+          test -f src/components/ArchitectureDiagram.astro
+          test -f src/components/DevelopmentTimeline.astro
+          test -f src/pages/projects/autonomous-driving/index.astro
+          test -f PHASE_3_STATUS.md
+          test -f phase4-authentic-media-payload.zip
+
+          if unzip -Z1 phase4-authentic-media-payload.zip | grep -qx 'index.html'; then
+            echo 'Refusing to overwrite the currently deployed root index.html.' >&2
+            exit 1
+          fi
+
+          required_payload_files=(
+            'src/components/EvidenceMedia.astro'
+            'src/data/generatedMedia.ts'
+            'src/data/autonomousDriving.ts'
+            'src/pages/index.astro'
+            'src/pages/projects/autonomous-driving/index.astro'
+            'src/pages/portfolio-print.astro'
+            'scripts/generate-media-metadata.mjs'
+            'scripts/verify-foundation.mjs'
+            'PHASE_4_STATUS.md'
+          )
+
+          for file in "${required_payload_files[@]}"; do
+            if ! unzip -Z1 phase4-authentic-media-payload.zip | grep -qx "$file"; then
+              echo "Required Phase 4 payload file is missing: $file" >&2
+              exit 1
+            fi
+          done
+
+      - name: Extract Phase 4 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -o phase4-authentic-media-payload.zip -d .
+          rm phase4-authentic-media-payload.zip
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install media tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y imagemagick webp
+
+      - name: Download verified robotics media
+        shell: bash
+        env:
+          ROBOTICS_COMMIT: b7ac0530c3fa7bafdd5dfdc64f1bcd1f7f204358
+        run: |
+          set -euo pipefail
+
+          media_dir='public/media/autonomous-driving'
+          base_url="https://raw.githubusercontent.com/DonFisto/vision-segmentation-autonomous-driving/${ROBOTICS_COMMIT}/assets"
+
+          mkdir -p "$media_dir"
+
+          curl -L --fail --retry 3 --silent --show-error \
+            "$base_url/AD_Project_Demo.gif" \
+            -o "$media_dir/project-demo.gif"
+
+          curl -L --fail --retry 3 --silent --show-error \
+            "$base_url/AD_Mapping_Demo.gif" \
+            -o "$media_dir/mapping-demo.gif"
+
+          curl -L --fail --retry 3 --silent --show-error \
+            "$base_url/demo_overlay.png" \
+            -o "$media_dir/segmentation-overlay.png"
+
+          curl -L --fail --retry 3 --silent --show-error \
+            "$base_url/Segmentatation%2BOverlay%2BTracking.png" \
+            -o "$media_dir/tracking-overlay.png"
+
+          test -s "$media_dir/project-demo.gif"
+          test -s "$media_dir/mapping-demo.gif"
+          test -s "$media_dir/segmentation-overlay.png"
+          test -s "$media_dir/tracking-overlay.png"
+
+      - name: Generate static and web-optimized derivatives
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          media_dir='public/media/autonomous-driving'
+
+          convert "${media_dir}/project-demo.gif[0]" \
+            -strip \
+            -define png:compression-level=9 \
+            "${media_dir}/project-demo-poster.png"
+
+          convert "${media_dir}/mapping-demo.gif[0]" \
+            -strip \
+            -define png:compression-level=9 \
+            "${media_dir}/mapping-demo-poster.png"
+
+          cwebp -quiet -q 88 \
+            "${media_dir}/segmentation-overlay.png" \
+            -o "${media_dir}/segmentation-overlay.webp"
+
+          cwebp -quiet -q 88 \
+            "${media_dir}/tracking-overlay.png" \
+            -o "${media_dir}/tracking-overlay.webp"
+
+          identify "${media_dir}/project-demo.gif[0]"
+          identify "${media_dir}/mapping-demo.gif[0]"
+          identify "${media_dir}/segmentation-overlay.png"
+          identify "${media_dir}/tracking-overlay.png"
+
+      - name: Generate typed media metadata
+        run: node scripts/generate-media-metadata.mjs
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Validate Phase 4 implementation
+        run: npm run validate
+
+      - name: Commit Phase 4 source and media
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+
+          git commit -m 'Add Phase 4 authentic portfolio media'
+          git push
