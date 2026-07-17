@@ -1,0 +1,89 @@
+name: Apply Phase 3 technical portfolio content
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify Phase 2 foundation and Phase 3 payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f index.html
+          test -f package.json
+          test -f package-lock.json
+          test -f src/data/autonomousDriving.ts
+          test -f src/pages/projects/autonomous-driving/index.astro
+          test -f phase3-technical-content-payload.zip
+
+          if unzip -Z1 phase3-technical-content-payload.zip | grep -qx 'index.html'; then
+            echo 'Refusing to overwrite the currently deployed root index.html.' >&2
+            exit 1
+          fi
+
+          required_payload_files=(
+            'src/components/ArchitectureDiagram.astro'
+            'src/components/RosTopicList.astro'
+            'src/components/DevelopmentTimeline.astro'
+            'src/components/TechnicalDetailGrid.astro'
+            'src/data/autonomousDriving.ts'
+            'src/pages/projects/autonomous-driving/index.astro'
+            'src/pages/portfolio-print.astro'
+            'scripts/verify-foundation.mjs'
+          )
+
+          for file in "${required_payload_files[@]}"; do
+            if ! unzip -Z1 phase3-technical-content-payload.zip | grep -qx "$file"; then
+              echo "Required Phase 3 payload file is missing: $file" >&2
+              exit 1
+            fi
+          done
+
+      - name: Extract Phase 3 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -o phase3-technical-content-payload.zip -d .
+          rm phase3-technical-content-payload.zip
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Validate Phase 3 implementation
+        run: npm run validate
+
+      - name: Commit Phase 3 source
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+
+          git commit -m 'Add Phase 3 technical portfolio content'
+          git push
