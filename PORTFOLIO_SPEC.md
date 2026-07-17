@@ -19,15 +19,43 @@ The portfolio must communicate engineering ownership, technical scope, implement
 
 ## 2. Project owner
 
-**Name:** Daniel Martínez-Cabeza de Vaca
+**Name:** Daniel Martínez-Cabeza de Vaca Guillén
 
-**Academic profile:** Mathematics + Computer Science
+**Academic profile:** Dual degree in Mathematics and Computer Science
+
+**University:** University of Murcia
+
+**Expected graduation:** June 2028
+
+**International study:** Erasmus exchange at Universität Stuttgart during the 2026/2027 academic year
+
+**Languages:**
+- Spanish — Native
+- English — C1
+- German — B1
+- French — Basic
 
 **Project ownership statement:**
 
 > Individual engineering project · ROS2 / CARLA research prototype
 
 The site must make clear that Daniel designed and implemented the project. It must not imply that he merely contributed to a larger team.
+
+### Approved publishing decisions
+
+- The autonomous-driving project should dominate the homepage.
+- Personal and academic information should remain visible but secondary.
+- A public email address may be shown.
+- A phone number must not be shown.
+- Current location must not be shown.
+- Availability wording may combine:
+  - open to working-student roles;
+  - open to robotics and autonomous-driving opportunities.
+- Formula Student / LiDAR content must remain hidden until it receives a separate evidence audit.
+- The public domain is currently `https://donfisto.github.io`.
+- A custom domain may be introduced later.
+- Clearly labelled media placeholders are allowed during implementation.
+- Clearly labelled placeholders may temporarily appear in the PDF until authentic replacement media is available.
 
 Do not invent project dates. Add dates only after they are verified from repository history or explicitly supplied by Daniel.
 
@@ -41,7 +69,7 @@ Do not invent project dates. Add dates only after they are verified from reposit
 
 ### Primary summary
 
-> A modular ROS2 perception and local-mapping stack that transforms CARLA camera data into semantic understanding, tracked objects, depth-aware fusion, navigation cues and accumulated occupancy maps.
+> A modular ROS2 perception and local-mapping stack that transforms CARLA camera data into semantic understanding, tracked objects, relative-depth fusion, navigation cues, local occupancy layers and short-term accumulated maps.
 
 ### Repository
 
@@ -49,15 +77,17 @@ Do not invent project dates. Add dates only after they are verified from reposit
 
 ### Core technologies
 
-- ROS2
+- ROS2 Humble
 - CARLA
+- Python
 - PyTorch
-- SegFormer
+- MMSegmentation
+- SegFormer-B0
 - Depth Anything V2
 - OpenCV
 - Linux
-- Python
-- C++
+
+C++ may appear in Daniel's general skills, but it must not be presented as a core implementation technology of this specific repository.
 
 Do not add technologies merely because they are common in robotics. Only list technologies demonstrably used by the project.
 
@@ -75,7 +105,7 @@ The portfolio may describe the system in terms of the following implemented or d
 - free-space estimation;
 - reactive navigation cues;
 - local occupancy generation;
-- static and dynamic occupancy layers;
+- combined, static and dynamic occupancy layers;
 - odometry-supported accumulated local mapping;
 - ROS2 node-based modular integration;
 - visualization and debugging workflows;
@@ -150,6 +180,7 @@ The following limitations must be visible and written plainly:
 - Bounding-box fusion can include background pixels.
 - Accumulated mapping uses simulator-provided odometry.
 - The current accumulated representation is not a complete SLAM system.
+- Local occupancy uses a heuristic image-to-ground projection rather than calibrated camera geometry and metric depth.
 
 Additional limitations may be added only if verified by repository documentation or supplied by Daniel.
 
@@ -189,7 +220,7 @@ Badge: `SegFormer-B0`
 
 ### Dataset engineering
 
-Badge: `19 classes`
+Badge: `Cityscapes-19`
 
 - CARLA collection and conversion tooling
 - Cityscapes-19 label pipeline
@@ -197,7 +228,7 @@ Badge: `19 classes`
 
 ### ROS2 system design
 
-Badge: `12 nodes`
+Badge: `12 principal nodes`
 
 - Independent perception, fusion and control nodes
 - Structured topics and compressed outputs
@@ -205,10 +236,10 @@ Badge: `12 nodes`
 
 ### Navigation and mapping
 
-Badge: `3 map layers`
+Badge: `3 occupancy layers`
 
 - Semantic-depth free-space estimation
-- Static and dynamic occupancy layers
+- Combined, static and dynamic occupancy layers
 - Odometry-based accumulated local mapping
 
 The badges are supporting metadata, not the visual focus.
@@ -221,18 +252,18 @@ The badges are supporting metadata, not the visual focus.
 
 ## 9. Development trajectory
 
-The website may present the following eight phases:
+The website may present the following eight verified phases:
 
-0. MMSegmentation fundamentals
-1. Cityscapes expansion
-2. ROS2 + CARLA integration
-3. Vehicle control pipeline
-4. Live recording and Foxglove
-5. Remote debugging visualization
-6. Repository refactor
-7. Depth, navigation and local mapping
+0. MMSegmentation Fundamentals
+1. Cityscapes Expansion
+2. ROS2 + CARLA Integration
+3. CARLA Simulation Control
+4. ROS Bags & Foxglove Visualization
+5. ASCII Debug Visualization
+6. Repository Structuring
+7. Depth-Aware Navigation & Local Mapping
 
-Before publication, verify the wording and sequence against repository documentation.
+Before publication, verify that later repository changes have not superseded this sequence.
 
 The timeline must show engineering progression rather than simply listing features.
 
@@ -240,9 +271,40 @@ The timeline must show engineering progression rather than simply listing featur
 
 ## 10. Website information architecture
 
-The preferred single-project website structure is:
+The website must use a two-layer structure.
 
-1. Hero / project overview
+### Root homepage
+
+The autonomous-driving project should dominate the first screen and visual hierarchy.
+
+The homepage should include:
+
+1. Daniel's name and concise technical positioning
+2. Featured autonomous-driving project
+3. Individual ownership statement
+4. Repository and case-study links
+5. Secondary academic information
+6. Selected verified skills
+7. Languages
+8. Availability for working-student, robotics and autonomous-driving opportunities
+9. Public email contact
+10. Optional personal interests
+
+The homepage must not show:
+
+- phone number;
+- current location;
+- unaudited Formula Student / LiDAR claims.
+
+### Detailed project route
+
+Preferred route:
+
+`/projects/autonomous-driving/`
+
+It should contain:
+
+1. Project hero / overview
 2. System architecture
 3. Engineering contributions
 4. Development trajectory
@@ -250,7 +312,7 @@ The preferred single-project website structure is:
 6. Limitations
 7. Roadmap
 8. Repository and live demos
-9. Optional technical appendix or expandable implementation details
+9. Optional expandable technical details
 
 The first screen must answer, within approximately ten seconds:
 
@@ -259,7 +321,7 @@ The first screen must answer, within approximately ten seconds:
 - Which robotics problems does it address?
 - Where is the repository?
 
-The full page should answer, within approximately one minute:
+The detailed project page should answer, within approximately one minute:
 
 - How does the architecture work?
 - Which parts did Daniel implement?
@@ -388,6 +450,8 @@ Preferred assets:
 - Never fabricate screenshots.
 - Never label a conceptual illustration as a real result.
 - Placeholder visuals must be visibly and semantically marked as placeholders.
+- Placeholders are allowed during implementation and may temporarily appear in the PDF.
+- Every temporary PDF placeholder must state which authentic project capture should replace it.
 - Captions must explain what is shown without overstating performance.
 - GIFs and video should have static fallback frames.
 - Print mode must always use static frames.
@@ -483,6 +547,24 @@ The implementation agent may adjust this structure when justified, but must docu
 
 ---
 
+
+## 16A. Contact and privacy requirements
+
+The public site may display Daniel's email address.
+
+The public site must not display:
+
+- phone number;
+- current location.
+
+Contact details must be controlled through a typed allowlist so private fields cannot appear accidentally.
+
+Availability may be expressed as:
+
+> Open to working-student roles and robotics or autonomous-driving opportunities.
+
+---
+
 ## 16. Accessibility requirements
 
 The site must include:
@@ -553,6 +635,10 @@ The portfolio is ready when:
 - limitations are visible and honest;
 - the repository is easy to access;
 - the website works well on desktop and mobile;
+- the autonomous-driving project clearly dominates the homepage;
+- email is the only directly published contact field;
+- phone number and current location are absent;
+- unaudited Formula Student / LiDAR content is hidden;
 - the four-page PDF works as a standalone attachment;
 - no critical text is too small;
 - no section is repetitive;
