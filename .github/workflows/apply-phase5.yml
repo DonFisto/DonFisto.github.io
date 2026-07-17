@@ -1,0 +1,104 @@
+name: Apply Phase 5 release system
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify Phase 4 foundation and Phase 5 payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f index.html
+          test -f package.json
+          test -f package-lock.json
+          test -f PHASE_4_STATUS.md
+          test -f src/pages/portfolio-print.astro
+          test -f public/media/autonomous-driving/project-demo-poster.png
+          test -f phase5-release-payload.zip
+
+          if unzip -Z1 phase5-release-payload.zip | grep -qx 'index.html'; then
+            echo 'Refusing to overwrite the legacy root index.html.' >&2
+            exit 1
+          fi
+
+          required_payload_files=(
+            'package.json'
+            'scripts/apply-phase5-source.mjs'
+            'scripts/export-pdf.mjs'
+            'scripts/verify-pdf.mjs'
+            'scripts/verify-deployment.mjs'
+            '.github/workflows/check.yml'
+            '.github/workflows/deploy-pages.yml'
+            'PHASE_5_STATUS.md'
+            'PHASE_5_DEPLOYMENT_RUNBOOK.md'
+          )
+
+          for file in "${required_payload_files[@]}"; do
+            if ! unzip -Z1 phase5-release-payload.zip | grep -qx "$file"; then
+              echo "Required Phase 5 payload file is missing: $file" >&2
+              exit 1
+            fi
+          done
+
+      - name: Extract Phase 5 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -o phase5-release-payload.zip -d .
+          rm phase5-release-payload.zip
+
+      - name: Preserve legacy root site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p legacy
+          cp index.html legacy/index.html
+
+      - name: Add PDF links to Astro navigation
+        run: node scripts/apply-phase5-source.mjs
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install and lock Phase 5 dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build and verify complete release
+        run: npm run build:portfolio
+
+      - name: Commit Phase 5 release source and PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+
+          git commit -m 'Add Phase 5 PDF export and Pages deployment'
+          git push
