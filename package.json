@@ -1,6 +1,6 @@
 {
   "name": "donfisto-portfolio",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -13,11 +13,18 @@
     "preview": "astro preview",
     "verify": "node scripts/verify-foundation.mjs",
     "validate": "npm run check && npm run build && npm run verify",
-    "media:metadata": "node scripts/generate-media-metadata.mjs"
+    "media:metadata": "node scripts/generate-media-metadata.mjs",
+    "phase5:source": "node scripts/apply-phase5-source.mjs",
+    "export:pdf": "node scripts/export-pdf.mjs",
+    "verify:pdf": "node scripts/verify-pdf.mjs",
+    "verify:deployment": "node scripts/verify-deployment.mjs",
+    "build:portfolio": "npm run validate && npm run export:pdf && npm run build && npm run verify:pdf && npm run verify:deployment"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",
     "astro": "7.1.1",
+    "pdf-lib": "1.17.1",
+    "playwright": "1.61.1",
     "typescript": "6.0.3"
   }
 }

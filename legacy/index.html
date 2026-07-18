@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daniel Martínez-Cabeza de Vaca Guillén | Portfolio</title>
+  <meta
+    name="description"
+    content="Portfolio of Daniel Martínez-Cabeza de Vaca Guillén — Mathematics & Computer Science student focused on AI, Computer Vision, and Autonomous Systems."
+  />
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --bg-soft: #eef2f9;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5e6b85;
+      --accent: #3563ff;
+      --accent-2: #0ea5a4;
+      --border: #dbe3f1;
+      --shadow: 0 10px 28px rgba(22, 32, 51, 0.08);
+      --radius: 18px;
+      --max-width: 1150px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(53, 99, 255, 0.07), transparent 22%),
+        linear-gradient(180deg, #f6f8fc 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(92%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .section { padding: 88px 0; }
+    .section-title {
+      font-size: clamp(1.9rem, 2.8vw, 2.5rem);
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+    .section-subtitle {
+      color: var(--muted);
+      max-width: 720px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(246, 248, 252, 0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 500;
+      transition: 0.2s ease;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #5f84ff);
+      color: white;
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 88px 0 64px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.95fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.7rem, 5.3vw, 4.9rem);
+      line-height: 1.03;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span { color: var(--accent-2); }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 700px;
+      margin-bottom: 26px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .profile-card { padding: 28px; }
+
+    .profile-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .profile-top h2 {
+      font-size: 1.14rem;
+      margin-bottom: 4px;
+    }
+
+    .profile-top p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fbfcff;
+      color: var(--muted);
+      word-break: break-word;
+    }
+
+    .contact-item strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+      font-size: 0.94rem;
+    }
+
+    .about-grid,
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+    }
+
+    .about-text,
+    .about-side,
+    .skill-card,
+    .entry,
+    .contact-box {
+      padding: 26px;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fbfcff;
+    }
+
+    .stat h3 {
+      color: var(--accent);
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .stat p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .entries {
+      display: grid;
+      gap: 20px;
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+
+    .entry-header h3 {
+      font-size: 1.14rem;
+      margin-bottom: 4px;
+    }
+
+    .entry-header p { color: var(--muted); }
+    .entry-date {
+      color: var(--accent-2);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .entry ul {
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .entry li + li { margin-top: 8px; }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .project-image img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #f0f4fb;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: #eef3ff;
+      border: 1px solid #d7e2ff;
+      color: #2744a8;
+      font-size: 0.92rem;
+    }
+
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .martial-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .martial-photo img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .contact-section { text-align: center; }
+
+    .contact-box {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .contact-box p {
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 22px;
+    }
+
+    .contact-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    footer {
+      padding: 28px 0 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .about-grid,
+      .skills-grid,
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .entry-header {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 0;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .martial-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#home" class="brand">Daniel<span>.</span></a>
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#interests">Interests</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <h1>AI, Computer Vision & <span>Autonomous Systems</span></h1>
+          <p>
+            I am Daniel Martínez-Cabeza de Vaca Guillén, a Mathematics and Computer Science student
+            focused on intelligent perception systems, robotics, and autonomous driving.
+          </p>
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">View Projects</a>
+            <a href="mailto:dmcvg@icloud.com" class="btn btn-secondary">Contact Me</a>
+          </div>
+          <div class="hero-meta">
+            <div class="pill">Murcia, Spain</div>
+            <div class="pill">AI / CV / Robotics</div>
+            <div class="pill">Open to internships</div>
+          </div>
+        </div>
+
+        <aside class="card profile-card">
+          <div class="profile-top">
+            <div class="avatar">DM</div>
+            <div>
+              <h2>Daniel Martínez-Cabeza de Vaca Guillén</h2>
+              <p>Mathematics & Computer Science Student</p>
+            </div>
+          </div>
+
+          <div class="contact-list">
+            <div class="contact-item">
+              <strong>Email</strong>
+              <a href="mailto:dmcvg@icloud.com">dmcvg@icloud.com</a>
+            </div>
+            <div class="contact-item">
+              <strong>Phone</strong>
+              <a href="tel:+34665776581">+34 665 776 581</a>
+            </div>
+            <div class="contact-item">
+              <strong>GitHub</strong>
+              <a href="https://github.com/DonFisto" target="_blank" rel="noopener noreferrer">github.com/DonFisto</a>
+            </div>
+            <div class="contact-item">
+              <strong>Main Interests</strong>
+              Artificial Intelligence, Computer Vision, Autonomous Driving, Robotics
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <h2 class="section-title">About</h2>
+        <p class="section-subtitle">
+          Interdisciplinary training that combines mathematics, software development, and applied AI.
+        </p>
+
+        <div class="about-grid">
+          <div class="card about-text">
+            <p>
+              I am currently pursuing a dual degree in Mathematics and Computer Science, with a growing
+              specialization in perception systems for autonomous applications.
+            </p>
+            <p>
+              My main technical interests include semantic segmentation, LiDAR perception, ROS2-based
+              robotics, simulation with CARLA and Gazebo, and evaluation-driven development of machine learning systems.
+            </p>
+            <p>
+              I enjoy building modular pipelines, experimenting with models and architectures, and translating
+              theoretical knowledge into practical engineering projects.
+            </p>
+          </div>
+
+          <div class="card about-side">
+            <div class="stats">
+              <div class="stat">
+                <h3>2028</h3>
+                <p>Expected graduation</p>
+              </div>
+              <div class="stat">
+                <h3>2</h3>
+                <p>Degrees in parallel</p>
+              </div>
+              <div class="stat">
+                <h3>C1</h3>
+                <p>English</p>
+              </div>
+              <div class="stat">
+                <h3>B1</h3>
+                <p>German</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="education">
+      <div class="container">
+        <h2 class="section-title">Education</h2>
+        <p class="section-subtitle">Academic background in mathematics, computer science, and AI-oriented systems.</p>
+
+        <div class="entries">
+          <article class="card entry">
+            <div class="entry-header">
+              <div>
+                <h3>Universidad de Murcia (UMU)</h3>
+                <p>Dual Degree in Mathematics and Computer Science</p>
+              </div>
+              <div class="entry-date">Expected 2028</div>
+            </div>
+            <ul>
+              <li>Training across mathematics, algorithms, software engineering, and intelligent systems.</li>
+              <li>Strong interest in autonomous driving, perception, and computer vision applications.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <h2 class="section-title">Selected Projects</h2>
+        <p class="section-subtitle">Projects in perception, robotics, and autonomous driving simulation.</p>
+
+        <div class="entries">
+          <article class="card entry">
+            <div class="project-grid">
+              <div class="project-image">
+                <img src="images/project1.jpg" alt="Autonomous driving perception project">
+              </div>
+              <div>
+                <div class="entry-header">
+                  <div>
+                    <h3>Autonomous Driving Perception Pipeline</h3>
+                    <p>CARLA · PyTorch · Segmentation · Depth Estimation</p>
+                  </div>
+                </div>
+                <ul>
+                  <li>Designed a modular perception-to-autonomy pipeline in CARLA.</li>
+                  <li>Integrated semantic segmentation and depth estimation components.</li>
+                  <li>Implemented model evaluation workflows using IoU-based metrics.</li>
+                  <li>Connected perception outputs with downstream navigation concepts.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="card entry">
+            <div class="project-grid">
+              <div class="project-image">
+                <img src="images/project2.jpg" alt="LiDAR perception system">
+              </div>
+              <div>
+                <div class="entry-header">
+                  <div>
+                    <h3>Formula Student Driverless – LiDAR Perception System</h3>
+                    <p>ROS2 · Gazebo · LiDAR · Real-Time Robotics</p>
+                  </div>
+                </div>
+                <ul>
+                  <li>Built a LiDAR-based perception pipeline in ROS2.</li>
+                  <li>Validated the system in Gazebo and adapted it for robotic deployment.</li>
+                  <li>Implemented filtering and obstacle detection from point cloud data.</li>
+                  <li>Worked under practical constraints related to robotics integration.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="container">
+        <h2 class="section-title">Skills</h2>
+        <p class="section-subtitle">Technologies and tools used in software, AI, and robotics projects.</p>
+
+        <div class="skills-grid">
+          <div class="card skill-card">
+            <h3>Programming</h3>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">C++</span>
+              <span class="tag">Java</span>
+              <span class="tag">SQL</span>
+            </div>
+          </div>
+
+          <div class="card skill-card">
+            <h3>AI / Computer Vision</h3>
+            <div class="tags">
+              <span class="tag">PyTorch</span>
+              <span class="tag">OpenCV</span>
+              <span class="tag">Semantic Segmentation</span>
+              <span class="tag">Model Evaluation</span>
+            </div>
+          </div>
+
+          <div class="card skill-card">
+            <h3>Robotics</h3>
+            <div class="tags">
+              <span class="tag">ROS2</span>
+              <span class="tag">CARLA</span>
+              <span class="tag">Gazebo</span>
+              <span class="tag">LiDAR</span>
+              <span class="tag">TF2</span>
+            </div>
+          </div>
+
+          <div class="card skill-card">
+            <h3>Tools</h3>
+            <div class="tags">
+              <span class="tag">Linux</span>
+              <span class="tag">Git</span>
+              <span class="tag">Docker</span>
+              <span class="tag">VS Code</span>
+              <span class="tag">IntelliJ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="interests">
+      <div class="container">
+        <h2 class="section-title">Interests</h2>
+        <p class="section-subtitle">Activities that reflect discipline, competitiveness, and consistency.</p>
+
+        <article class="card entry">
+          <div class="martial-grid">
+            <div class="martial-photo">
+              <img src="images/martial-arts.jpg" alt="Martial arts competition">
+            </div>
+            <div>
+              <div class="entry-header">
+                <div>
+                  <h3>Martial Arts Competition</h3>
+                  <p>Regular training and competitive participation</p>
+                </div>
+              </div>
+              <ul>
+                <li>Compete in martial arts alongside academic work.</li>
+                <li>Develop discipline, resilience, and performance under pressure.</li>
+                <li>Value consistency, focus, and long-term progression.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <div class="container">
+        <div class="card contact-box">
+          <h2 class="section-title">Contact</h2>
+          <p>
+            Interested in AI, robotics, computer vision, or autonomous systems collaborations or internships.
+          </p>
+          <div class="contact-actions">
+            <a href="mailto:dmcvg@icloud.com" class="btn btn-primary">Send Email</a>
+            <a href="https://github.com/DonFisto" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Visit GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Daniel Martínez-Cabeza de Vaca Guillén</p>
+    </div>
+  </footer>
+</body>
+</html>
