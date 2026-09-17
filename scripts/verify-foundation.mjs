@@ -1,142 +1,60 @@
-import { readFile, stat } from "node:fs/promises";
-import { resolve } from "node:path";
-
-const requiredRoutes = [
-  "dist/index.html",
-  "dist/projects/autonomous-driving/index.html",
-  "dist/portfolio-print/index.html",
-  "dist/404.html",
-];
-
-for (const file of requiredRoutes) {
-  const info = await stat(resolve(file));
-  if (!info.isFile() || info.size < 200) {
-    throw new Error(`Missing or unexpectedly small build output: ${file}`);
+import { readFile, stat } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { createHash } from 'node:crypto';
+const routes = ['dist/index.html','dist/projects/autonomous-driving/index.html','dist/portfolio-print/index.html','dist/404.html'];
+const pages = await Promise.all(routes.map(async path => {
+  if ((await stat(path)).size < 200) throw new Error(`Missing/empty route: ${path}`);
+  return readFile(path,'utf8');
+}));
+const [home, project, print] = pages;
+const requireText = (html, value, label) => { if (!html.includes(value)) throw new Error(`${label}: missing ${value}`); };
+for (const [label, html] of [['home',home],['case study',project],['print',print]]) {
+  for (const value of ['Autonomous Driving','LaneMap','RoutePlan','OpenDRIVE','Individual engineering project','data-status="next"','not implemented']) requireText(html,value,label);
+  for (const value of ['tel:', '+34', 'Formula Student', 'LiDAR', 'Murcia, Spain', 'Current location', 'currentLocation', 'Autonomous-Driving Perception &amp; Local Mapping', 'Autonomous-Driving Perception & Local Mapping']) {
+    if (html.includes(value)) throw new Error(`${label}: forbidden/stale published content ${value}`);
+  }
+  if (!/trajectory[\s\S]*control/i.test(html)) throw new Error(`${label}: future trajectory/control boundary absent`);
+}
+for (const value of ['data-stream="local"','data-stream="global"','Future','not ID equality','privileged map information']) requireText(project,value,'architecture');
+for (const topic of ['/carla/hero_odom','/perception/lane/tracked_centerline','/perception/lane/local_map/vector','/planning/goal','/planning/route_plan']) requireText(project,topic,'interfaces');
+for (const html of [home,project]) {
+  for (const mode of ['system','light','dark']) requireText(html,`<option value="${mode}"`, 'theme selection');
+  requireText(html, 'aria-label="Color theme"', 'accessible theme selection');
+  for (const meta of ['rel="canonical"','property="og:image"','name="twitter:card"']) requireText(html,meta,'metadata');
+  if (/<(?:img|source|video)\b[^>]*(?:src|srcset)="[^"]*\.gif/i.test(html)) throw new Error('GIF loaded without user interaction');
+}
+if ((print.match(/class="pdf-page"/g) ?? []).length !== 4) throw new Error('Print must have exactly four sheets');
+if (print.includes('portfolio-theme') || print.includes('class="theme-selector"')) throw new Error('Print must be independent of web theme persistence');
+if (print.includes('.gif') || print.includes('data-motion-media=')) throw new Error('Print must use only static media');
+// Every local resource and link target resolves against the generated artifact.
+for (let i=0;i<pages.length;i++) {
+  const html = pages[i];
+  const pathname = routes[i].replace(/^dist/,'').replace(/index\.html$/,'');
+  for (const match of html.matchAll(/\b(?:href|src|srcset|data-src)="([^"]+)"/g)) {
+    const value = match[1].replaceAll('&amp;','&');
+    if (!value.startsWith('/') && !value.startsWith('#')) continue;
+    const url = new URL(value, `https://donfisto.github.io${pathname}`);
+    const path = resolve('dist', `.${decodeURIComponent(url.pathname)}`, url.pathname.endsWith('/') ? 'index.html' : '');
+    if (!(await stat(path).catch(()=>null))?.isFile()) throw new Error(`${routes[i]} broken local target: ${value}`);
+    if (url.hash) {
+      const destination = await readFile(path,'utf8');
+      if (!destination.includes(`id="${decodeURIComponent(url.hash.slice(1))}"`)) throw new Error(`Broken anchor: ${value}`);
+    }
   }
 }
-
-const requiredMedia = [
-  "public/media/autonomous-driving/project-demo.gif",
-  "public/media/autonomous-driving/project-demo-poster.png",
-  "public/media/autonomous-driving/segmentation-overlay.png",
-  "public/media/autonomous-driving/segmentation-overlay.webp",
-  "public/media/autonomous-driving/tracking-overlay.png",
-  "public/media/autonomous-driving/tracking-overlay.webp",
-  "public/media/autonomous-driving/mapping-demo.gif",
-  "public/media/autonomous-driving/mapping-demo-poster.png",
-];
-
-for (const file of requiredMedia) {
-  const info = await stat(resolve(file));
-  if (!info.isFile() || info.size < 1_000) {
-    throw new Error(`Missing or unexpectedly small authentic media asset: ${file}`);
+const provenance = JSON.parse(await readFile('public/media/autonomous-driving/provenance.json','utf8'));
+if (!/^[a-f0-9]{40}$/.test(provenance.commit) || !provenance.branch) throw new Error('Missing exact source provenance');
+for (const key of ['planning','lanePhoto','laneDemo','projectDemo','trackingOverlay','mappingDemo','segmentationOverlay']) {
+  const asset=provenance.assets[key];
+  if (!asset) throw new Error(`Missing media ${key}`);
+  for (const base of ['public','dist']) {
+    const bytes=await readFile(`${base}${asset.portfolioPath}`);
+    if (createHash('sha256').update(bytes).digest('hex')!==asset.sourceSha256) throw new Error(`Media checksum failed: ${key} in ${base}`);
   }
 }
-
-const root = await readFile("dist/index.html", "utf8");
-const project = await readFile("dist/projects/autonomous-driving/index.html", "utf8");
-const print = await readFile("dist/portfolio-print/index.html", "utf8");
-const combined = `${root}\n${project}\n${print}`;
-
-const forbidden = [
-  "tel:",
-  "Formula Student",
-  "+34 665",
-  ">C++<",
-];
-
-for (const value of forbidden) {
-  if (combined.includes(value)) {
-    throw new Error(`Forbidden public content found in build: ${value}`);
-  }
-}
-
-const pageCount = (print.match(/class="pdf-page"/g) ?? []).length;
-if (pageCount !== 4) {
-  throw new Error(`Expected four print pages, found ${pageCount}`);
-}
-
-const requiredPhrases = [
-  "Individual engineering project",
-  "relative-depth",
-  "simulator-provided",
-  "not a complete SLAM",
-  "semantic object extraction",
-  "12 principal nodes",
-  "Cityscapes-19",
-  "3 occupancy layers",
-  "Repository outputs, shown with their engineering caveats",
-  "Additional captures planned",
-];
-
-for (const phrase of requiredPhrases) {
-  if (!combined.includes(phrase)) {
-    throw new Error(`Required integrity phrase is absent: ${phrase}`);
-  }
-}
-
-const architectureNodeCount = (project.match(/data-architecture-node=/g) ?? []).length;
-const architectureEdgeCount = (project.match(/data-architecture-edge=/g) ?? []).length;
-const timelinePhaseCount = (project.match(/data-timeline-phase=/g) ?? []).length;
-const topicCount = (project.match(/data-topic=/g) ?? []).length;
-const technicalDetailCount = (project.match(/data-technical-detail=/g) ?? []).length;
-const projectMediaCount = (project.match(/data-evidence-media=/g) ?? []).length;
-const printMediaCount = (print.match(/data-evidence-media=/g) ?? []).length;
-const pendingPlaceholderCount = (project.match(/PROJECT OUTPUT NEEDED/g) ?? []).length;
-
-if (architectureNodeCount !== 11) {
-  throw new Error(`Expected 11 architecture nodes, found ${architectureNodeCount}`);
-}
-
-if (architectureEdgeCount !== 13) {
-  throw new Error(`Expected 13 architecture edges, found ${architectureEdgeCount}`);
-}
-
-if (timelinePhaseCount !== 8) {
-  throw new Error(`Expected 8 development phases, found ${timelinePhaseCount}`);
-}
-
-if (topicCount !== 5) {
-  throw new Error(`Expected 5 featured ROS2 topics, found ${topicCount}`);
-}
-
-if (technicalDetailCount !== 6) {
-  throw new Error(`Expected 6 technical detail cards, found ${technicalDetailCount}`);
-}
-
-if (projectMediaCount !== 4) {
-  throw new Error(`Expected one hero plus three authentic project media figures, found ${projectMediaCount}`);
-}
-
-if (printMediaCount !== 4) {
-  throw new Error(`Expected one hero plus three authentic print media figures, found ${printMediaCount}`);
-}
-
-if (pendingPlaceholderCount !== 2) {
-  throw new Error(`Expected two explicitly labelled pending captures on the web page, found ${pendingPlaceholderCount}`);
-}
-
-if (print.includes(".gif") || print.includes("PROJECT OUTPUT NEEDED")) {
-  throw new Error("Print route must use static authentic frames and contain no media placeholders.");
-}
-
-if (!project.includes('aria-labelledby="architecture-title architecture-description"')) {
-  throw new Error("Accessible architecture title and description are missing.");
-}
-
-if (!print.includes("architecture-title-print") || !print.includes("architecture-description-print")) {
-  throw new Error("Print route does not contain the vector architecture diagram.");
-}
-
-const metadata = await readFile("src/data/generatedMedia.ts", "utf8");
-for (const key of ["projectDemo", "segmentationOverlay", "trackingOverlay", "mappingDemo"]) {
-  if (!metadata.includes(`${key}`)) {
-    throw new Error(`Generated media metadata is missing key: ${key}`);
-  }
-}
-
-console.log("Phase 4 authentic-media verification passed.");
-console.log(
-  `Verified ${requiredRoutes.length} routes, ${pageCount} print pages, ${projectMediaCount} authentic web figures, ` +
-    `${printMediaCount} static print figures, ${architectureNodeCount} architecture nodes and ${timelinePhaseCount} phases.`,
-);
+// PublicProfile is a typed allowlist; never add private fields to the source object.
+const profile = await readFile('src/data/personal.ts','utf8');
+requireText(profile,'satisfies PublicProfile','typed privacy allowlist');
+requireText(profile,'publicContactFields: ["email", "github"]','contact allowlist');
+if (/\b(?:phone|address|location|currentLocation)\s*:/.test(profile)) throw new Error('Private profile field introduced');
+console.log('Portfolio invariants passed: 4 routes; two-stream architecture; current scope and boundaries; 5 interfaces; static print; on-demand motion; privacy; local links/assets; 7 media checksums.');

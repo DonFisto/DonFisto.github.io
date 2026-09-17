@@ -1,0 +1,43 @@
+{
+  "repository": "DonFisto/vision-segmentation-autonomous-driving",
+  "branch": "feature/route-lane-association",
+  "commit": "42a250e34197b5c51ecca227a69f6c566df1de2c",
+  "captured": "2026-09-17",
+  "assets": {
+    "planning": {
+      "sourcePath": "assets/AD_Planning_Photo.png",
+      "portfolioPath": "/media/autonomous-driving/planning.png",
+      "sourceSha256": "10378591e1fe7e601b4644050d4da50b8c4753837d84f76a4ee0fd5de468e929"
+    },
+    "lanePhoto": {
+      "sourcePath": "assets/AD_Lane_Detection_Photo.png",
+      "portfolioPath": "/media/autonomous-driving/lane-detection.png",
+      "sourceSha256": "ccd6d89b49a03404847cbb60a29c92c2463640f0689fa7378300b356aa20a574"
+    },
+    "laneDemo": {
+      "sourcePath": "assets/AD_Lane_Detection_Demo.gif",
+      "portfolioPath": "/media/autonomous-driving/lane-detection-demo.gif",
+      "sourceSha256": "ed7ec45fa3d6f91925d9162da57e8683ca8c77b5d1d416950bfae9791f0e5852"
+    },
+    "projectDemo": {
+      "sourcePath": "assets/AD_Project_Demo.gif",
+      "portfolioPath": "/media/autonomous-driving/project-demo.gif",
+      "sourceSha256": "c680669c891ebd53276f33a5d731576a58b4364acb1b612b8294a3bc1e2f3d82"
+    },
+    "trackingOverlay": {
+      "sourcePath": "assets/Segmentatation+Overlay+Tracking.png",
+      "portfolioPath": "/media/autonomous-driving/tracking-overlay.png",
+      "sourceSha256": "d3031fc2c9c652d0bfb7672a09254aee3ed918aeaa62c354aa7725bcd49c9671"
+    },
+    "segmentationOverlay": {
+      "sourcePath": "assets/demo_overlay.png",
+      "portfolioPath": "/media/autonomous-driving/segmentation-overlay.png",
+      "sourceSha256": "675cdbd82052211ac12c3513da7400bb2782e68b2dba38f37f420a05c41078ff"
+    },
+    "mappingDemo": {
+      "sourcePath": "assets/AD_Mapping_Demo.gif",
+      "portfolioPath": "/media/autonomous-driving/mapping-demo.gif",
+      "sourceSha256": "0d0716c6fdd51824f1664bccd3ac6c6ffd796a95e372754877f8dad0cf467bed"
+    }
+  }
+}

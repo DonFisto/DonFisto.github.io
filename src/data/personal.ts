@@ -1,3 +1,5 @@
+import type { PublicProfile } from "./types";
+
 export const personal = {
   name: "Daniel Martínez-Cabeza de Vaca Guillén",
   shortName: "Daniel Martínez-Cabeza de Vaca",
@@ -16,4 +18,4 @@ export const personal = {
     { language: "French", level: "Basic" },
   ],
   publicContactFields: ["email", "github"] as const,
-} as const;
+} as const satisfies PublicProfile;

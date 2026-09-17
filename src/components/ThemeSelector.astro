@@ -1,0 +1,30 @@
+<label class="theme-selector" hidden>
+  <span>Theme</span>
+  <select aria-label="Color theme">
+    <option value="system">System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</label>
+<script>
+  const controls = document.querySelectorAll<HTMLSelectElement>('.theme-selector select');
+  const synchronize = () => {
+    const theme = document.documentElement.dataset.theme ?? 'system';
+    controls.forEach(control => { control.value = theme; });
+  };
+  controls.forEach(control => {
+    control.closest<HTMLElement>('.theme-selector')!.hidden = false;
+    control.addEventListener('change', () => {
+      const theme = control.value;
+      if (theme === 'light' || theme === 'dark') {
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('portfolio-theme', theme); } catch { /* Session-only override. */ }
+      } else {
+        delete document.documentElement.dataset.theme;
+        try { localStorage.removeItem('portfolio-theme'); } catch { /* Device preference still applies. */ }
+      }
+      synchronize();
+    });
+  });
+  synchronize();
+</script>

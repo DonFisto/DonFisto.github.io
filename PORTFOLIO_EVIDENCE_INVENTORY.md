@@ -1,3 +1,62 @@
+# Current portfolio evidence inventory
+
+Reviewed 2026-09-17. Source repository `DonFisto/vision-segmentation-autonomous-driving`, clean local branch `feature/route-lane-association`, exact HEAD `42a250e34197b5c51ecca227a69f6c566df1de2c`. Portfolio started clean on master `d7ab80b`. Robotics repository inspected read-only; no CARLA/ROS runtime was executed.
+
+Source precedence: current implementation > current documentation > history/recorded runtime > historical portfolio evidence > old page copy. All source links in the case study are pinned to this commit. Current documentation records completed implementation checkpoint `7b54639`; two subsequent commits update documentation.
+
+## Current claims safe to publish
+
+Paths below are under `ros/ros2_ws/src/` unless stated otherwise. Source presence establishes implemented logic; supplied runtime records establish only their bounded observations.
+
+| Claim | Source inspected | Qualification |
+| --- | --- | --- |
+| Binary learned road-marking segmentation | `road_marking_seg_node/road_marking_seg_node/road_marking_node.py` inference/mask publication | Model quality is not benchmarked here |
+| Metric BEV, component/context filtering, quadratic fitting | `lane_geometry_node/lane_geometry_node/{lane_geometry_node,lane_component_filter_node,lane_context_filter_node,lane_curve_fit_node}.py` | Planar ground / configured camera; RANSAC + refinement; geometry is conditional |
+| Temporal tracking and ego-motion propagation | `lane_geometry_node/lane_geometry_node/lane_tracking_node.py`, `_propagate_polynomial`, measurement gates, tracked Path publishers | CARLA odometry, not independently estimated motion; held/rejected/missing and inferred flag distinct |
+| Rolling perception-derived vector LaneMap | `lane_reasoning_nodes/lane_reasoning_nodes/tracked_lane_mapping_node.py`, `_direct_side`, `_build_vector_map`, `_publish_map` | Schema 2, zero/one local segment; held/inferred evidence not reintegrated; fresh odometry + insufficient support can yield empty map |
+| Direct world positions/headings | Same mapper, `_internal_world_to_carla_world`, `_internal_world_yaw_to_carla_world`; bridge `publish_hero_odom` | Local curvature scalar is unchanged; downstream sign not validated |
+| Custom directed topology and sampled graph | `global_route_planner/global_route_planner/{topology,carla_topology_adapter,routing_graph,carla_routing_graph_adapter}.py` | OpenDRIVE is privileged map evidence; graph built once at startup |
+| Legal follow/left/right change edges | `carla_routing_graph_adapter.py` transition guards/costs | Static map legality, not dynamic maneuver permission |
+| Dijkstra reference; A* production | `routing.py`; `global_route_planner_node.py`, `_publish_route` | Diagnostics exist; not rerun for portfolio |
+| Ego/goal graph association | `carla_route_association.py`, `routing_graph_index.py`, planner callbacks | Position-to-map association, not RoutePlan-to-LaneMap; orientation ignored |
+| RoutePlan valid/invalid publication | `route_plan_builder.py`; planner no-path handler | Nominal geometry, no speed/dynamic feasibility; only completed no-path clears to INVALID |
+| Independent global/local ID/revisions | `global_segment_ids.py`, `stable_map_revision`, mapper `_build_vector_map` | Geometric association planned; numeric equality invalid |
+| Visualization-only reflection | `planning_visualization/planning_visualization/foxglove_world_visualizer_node.py` deep copies and reflection; route/TF/graph adapters | Distinct world trees, no physical reflection TF; local paths relabelled without mirror |
+| Reusable startup orchestration | `autonomous_driving_startup/README.md`, `05_lanes.sh`, `06_planning.sh`, `00_stack.sh` | Local tmux/remote processes; topic discovery is not message health; remote environment export incomplete |
+| Selected interface types | `autonomy_interfaces/msg/*.msg`, bridge/tracker/mapper/planner publishers | Trajectory schemas are groundwork, not implemented subsystems |
+| Association / behavior / trajectory / tracking absent | Current package tree, planner subscriptions; `docs/agent/CURRENT_STATE.md`, `ARCHITECTURE.md`, `ROADMAP.md` | No combined consumer; earlier reactive controllers do not complete this pipeline |
+| Individual ownership, education/contact | User instructions and `PORTFOLIO_APPROVED_DECISIONS.md` | User-confirmed, not inferred from Git authorship |
+
+## Recorded runtime observations safe to publish with context
+
+Read in full: `docs/milestones/lane_perception_tracking_mapping.md` and `docs/milestones/global_route_planning.md`, recorded 2026-09-16. These are supplied development observations, not rerun tests.
+
+- Town10HD / Town10HD_Opt, CARLA 0.9.16: 3,066 nodes, 4,522 edges, one strongly connected component. Map export/configuration across all observations is not fully identified. Do not generalize counts.
+- One frame probe: mean lane-to-local-route distance 2.949 m direct versus 51.123 m with y flipped. Supports direct convention, not lane accuracy or an implemented association.
+- One route/graph probe: 323 route poses, 6,196 graph points, reported min/mean/median/max 0.0000 m. Raw method absent; point count corresponds to endpoints of 3,098 lane-follow edges; z display offset forbids assuming full 3D equality. Kept inside qualified expandable details.
+- Supplied visualization observation: RoutePlan status 1, direct route path and visualization copy with matching source timestamp; local tracked centerline alias in hero_viz.
+- One clean stop/full restart: one instance each of planner and four visualization/TF adapters. Goal must be republished. No general process-cleanup reliability claim.
+
+## Dates and evolution
+
+`docs/timeline.md`, both current milestone records and Git history agree: phase 8 Aug 01–04; phase 9 Aug 04–18; phase 10 Aug 20–23; phase 11 Sep 15–16, all 2026. Phase 12 association is NEXT. Phases 0–7 retain their names/history without invented dates. Dijkstra preceded A*; RoutePlan preceded the frame/visualization/startup checkpoint.
+
+## Remaining evidence questions
+
+- Raw runtime bag/probe files and exact map/export identities are unavailable in the checked-in September records.
+- No all-scenario lane accuracy, throughput, calibrated confidence, route-following performance or safety evidence is established.
+- Signed LaneMap curvature convention for downstream association/control still needs validation.
+- Association output schema, freshness/reset/sign policies are planned, not finalized.
+- Current remote ros2depth environment has no separately checked-in export/lock; do not claim fully reproducible dependencies from startup scripts alone.
+
+These gaps do not block an honest portfolio. No invented values or outputs fill them.
+
+---
+
+# Historical July audit — superseded publishing authority
+
+The following original inventory is retained as an archival record. Its scope endpoint, roadmap, title, principal-node count and outstanding personal confirmations are superseded by the current sections above and approved decisions. “Safe to publish” below applies only to explicitly labelled earlier work, not current architecture. The old five-topic selection is no longer the critical path.
+
 # PORTFOLIO_EVIDENCE_INVENTORY.md
 
 ## Audit baseline

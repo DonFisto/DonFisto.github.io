@@ -1,0 +1,17 @@
+---
+const sections = [['architecture','Architecture'],['lane-stack','Lane stack'],['lanemap','LaneMap'],['routing','Routing'],['association','Next boundary'],['interfaces','Interfaces'],['evidence','Evidence'],['evolution','Evolution'],['boundaries','Boundaries']];
+---
+<nav class="section-nav" aria-label="Case study sections"><div class="container">{sections.map(([id,label]) => <a href={`#${id}`}>{label}</a>)}</div></nav>
+<script>
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.section-nav a')];
+  const sections = links.map(link => document.querySelector<HTMLElement>(link.hash)).filter((section): section is HTMLElement => !!section);
+  let scheduled = false;
+  const update = () => {
+    const offset = 160;
+    const current = [...sections].reverse().find(section => section.getBoundingClientRect().top <= offset);
+    links.forEach(link => { if (link.hash === `#${current?.id}`) link.setAttribute('aria-current','location'); else link.removeAttribute('aria-current'); });
+    scheduled = false;
+  };
+  window.addEventListener('scroll', () => { if (!scheduled) { scheduled = true; requestAnimationFrame(update); } }, {passive:true});
+  update();
+</script>

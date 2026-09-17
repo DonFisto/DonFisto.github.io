@@ -1,32 +1,39 @@
 ---
-import { personal } from "../data/personal";
+import ThemeSelector from './ThemeSelector.astro';
+import { personal } from '../data/personal';
+import { project } from '../data/autonomousDriving';
+const isProject = Astro.url.pathname.startsWith(project.caseStudyPath);
+const links = [
+  { href: project.caseStudyPath, label: 'Project', active: isProject },
+  { href: isProject ? '#architecture' : '/#architecture', label: 'Architecture' },
+  { href: '/#profile', label: 'Profile' },
+  { href: personal.githubProfile, label: 'GitHub' },
+];
 ---
-
 <a class="skip-link" href="#main-content">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href="/" aria-label={`${personal.name} homepage`}>
-      <span class="brand-mark" aria-hidden="true">DM</span>
-      <span>{personal.shortName}</span>
-    </a>
-
+    <a class="brand" href="/" aria-label={`${personal.name} homepage`}>Daniel Martínez<span class="brand-slash" aria-hidden="true"> / </span></a>
     <nav class="desktop-nav" aria-label="Primary navigation">
-      <a href="/">Home</a>
-      <a href="/projects/autonomous-driving/">Case study</a>
-      <a href="/portfolio-print/">A4 preview</a>
-      <a href="/downloads/Daniel-Martinez-Cabeza-de-Vaca-Robotics-Portfolio.pdf" download>Download PDF</a>
-      <a href={personal.githubProfile} target="_blank" rel="noreferrer">GitHub</a>
+      {links.map(link => <a href={link.href} aria-current={link.active ? 'page' : undefined}>{link.label}</a>)}
+      <a class="pdf-link" href={project.pdfPath} download>Download PDF <span aria-hidden="true">↓</span></a>
+      <ThemeSelector />
     </nav>
-
     <details class="mobile-nav">
-      <summary>Menu</summary>
+      <summary>Menu <span aria-hidden="true">+</span></summary>
       <nav aria-label="Mobile navigation">
-        <a href="/">Home</a>
-        <a href="/projects/autonomous-driving/">Case study</a>
-        <a href="/portfolio-print/">A4 preview</a>
-      <a href="/downloads/Daniel-Martinez-Cabeza-de-Vaca-Robotics-Portfolio.pdf" download>Download PDF</a>
-        <a href={personal.githubProfile} target="_blank" rel="noreferrer">GitHub</a>
+        {links.map(link => <a href={link.href} aria-current={link.active ? 'page' : undefined}>{link.label}</a>)}
+        <a href={project.pdfPath} download>Download PDF ↓</a>
+        <ThemeSelector />
       </nav>
     </details>
   </div>
 </header>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('.mobile-nav');
+  menu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { menu.open = false; }));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && menu?.open) { menu.open = false; menu.querySelector('summary')?.focus(); }
+  });
+  document.addEventListener('click', event => { if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) menu.open = false; });
+</script>

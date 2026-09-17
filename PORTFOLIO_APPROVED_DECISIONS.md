@@ -23,7 +23,8 @@
    - open to working-student roles
    - open to robotics and autonomous-driving opportunities
 8. Formula Student / LiDAR: hidden pending a separate evidence audit
-9. Current GitHub Pages assumption: main branch / repository root; verify before migration
+9. Deployment: Astro `dist` through GitHub Actions; current deploy workflow is manual (`workflow_dispatch`). Do not trigger deployment during redesign review.
 10. Domain: donfisto.github.io for now
 11. Media: honest placeholders allowed initially
 12. PDF: clearly labelled placeholders allowed temporarily
+13. Visual identity: one professional technical / academic research design, with System (default), Light and Dark modes. Persist only explicit Light/Dark choices; System removes the override and follows the OS. Print remains an independent, deterministic light presentation. No external fonts, theme library or client framework.

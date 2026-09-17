@@ -1,188 +1,78 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import ArchitectureDiagram from "../../../components/ArchitectureDiagram.astro";
-import BadgeList from "../../../components/BadgeList.astro";
-import ContributionCard from "../../../components/ContributionCard.astro";
-import DevelopmentTimeline from "../../../components/DevelopmentTimeline.astro";
-import EvidenceMedia from "../../../components/EvidenceMedia.astro";
-import MediaPlaceholder from "../../../components/MediaPlaceholder.astro";
-import RosTopicList from "../../../components/RosTopicList.astro";
-import SectionHeader from "../../../components/SectionHeader.astro";
-import TechnicalDetailGrid from "../../../components/TechnicalDetailGrid.astro";
-import {
-  authenticMedia,
-  contributions,
-  heroMedia,
-  limitations,
-  pendingMedia,
-  project,
-  roadmap,
-  technologies,
-} from "../../../data/autonomousDriving";
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SystemArchitecture from '../../../components/SystemArchitecture.astro';
+import ProjectMedia from '../../../components/ProjectMedia.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import SectionNav from '../../../components/SectionNav.astro';
+import InterfaceTable from '../../../components/InterfaceTable.astro';
+import EvidencePanel from '../../../components/EvidencePanel.astro';
+import DevelopmentTimeline from '../../../components/DevelopmentTimeline.astro';
+import { project, source, sourceUrl, technologies, heroMedia, laneMedia, historicalMedia, lanePipeline, laneMapSemantics, routingPipeline, routePlanSemantics, decisions, limitations, roadmap } from '../../../data/autonomousDriving';
 ---
-
-<BaseLayout title={`${project.title} | Daniel Martínez-Cabeza de Vaca Guillén`} description={project.summary}>
-  <main id="main-content">
-    <section class="project-hero">
-      <div class="container project-hero-grid">
-        <div>
-          <p class="eyebrow">Engineering case study</p>
-          <h1>{project.title}</h1>
-          <p class="hero-summary">{project.summary}</p>
-          <p class="ownership">{project.ownership}</p>
-          <div class="button-row">
-            <a class="button button-primary" href={project.repository} target="_blank" rel="noreferrer">Repository</a>
-            <a class="button button-secondary" href="#architecture">System architecture</a>
-          </div>
-          <BadgeList items={technologies.map((technology) => technology.name)} />
-        </div>
-        <EvidenceMedia media={heroMedia} priority />
-      </div>
+<BaseLayout title="Lane perception, mapping & global routing | Autonomous Driving Laboratory" description={project.summary}>
+  <main id="main-content" tabindex="-1" class="case-study">
+    <section class="project-hero container">
+      <div class="hero-kicker"><a href="/">Daniel Martínez / Engineering portfolio</a><span>Case study 01</span></div>
+      <div class="project-heading"><h1>Autonomous Driving <em>Laboratory.</em></h1><div><p class="lead">{project.subtitle}</p><p class="ownership">{project.ownership}</p><a class="button button-primary" href={project.branchUrl}>Inspect the source <span aria-hidden="true">↗</span></a></div></div>
+      <div class="project-meta"><ul class="technology-list" aria-label="Current technologies">{technologies.map(item => <li>{item}</li>)}</ul><p><span class="status-label" data-status="next">Next</span> RoutePlan ↔ LaneMap association</p></div>
+      <ProjectMedia media={heroMedia} priority />
     </section>
-
-    <nav class="section-nav" aria-label="Case-study sections">
-      <div class="container">
-        <a href="#architecture">Architecture</a>
-        <a href="#interfaces">ROS2 interfaces</a>
-        <a href="#contributions">Contributions</a>
-        <a href="#methods">Methods</a>
-        <a href="#development">Development</a>
-        <a href="#outputs">Outputs</a>
-        <a href="#limitations">Limitations</a>
-        <a href="#roadmap">Roadmap</a>
-      </div>
-    </nav>
-
-    <section class="section" id="architecture">
-      <div class="container">
-        <SectionHeader
-          eyebrow="System architecture"
-          title="From CARLA RGB to a short-term accumulated local map"
-          description="Primary data paths are solid. The dashed edge marks simulator-provided hero odometry, which will later be replaced by independently estimated ego motion."
-        />
-        <ArchitectureDiagram />
-      </div>
-    </section>
-
-    <section class="section section-surface" id="interfaces">
-      <div class="container">
-        <SectionHeader
-          eyebrow="Selected ROS2 interfaces"
-          title="Five topics that expose the core system transitions"
-          description="The case study highlights only the topics that best explain tracking, fusion, free space, occupancy and accumulated mapping."
-        />
-        <RosTopicList />
-      </div>
-    </section>
-
-    <section class="section" id="contributions">
-      <div class="container">
-        <SectionHeader
-          eyebrow="Engineering contributions"
-          title="Building the stack, not just running a model"
-          description="Four evidence-backed areas connect model development to robotics integration and spatial reasoning."
-        />
-        <div class="contribution-grid">
-          {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-surface" id="methods">
-      <div class="container">
-        <SectionHeader
-          eyebrow="Technical implementation"
-          title="Inputs, methods, outputs and engineering boundaries"
-          description="The implementation uses explicit, inspectable methods rather than hiding the pipeline behind broad autonomy claims."
-        />
-        <TechnicalDetailGrid />
-      </div>
-    </section>
-
-    <section class="section" id="development">
-      <div class="container">
-        <SectionHeader
-          eyebrow="Development trajectory"
-          title="Eight verified phases of increasing system scope"
-          description="The sequence shows how model experimentation became an observable, modular ROS2 perception and local-mapping prototype."
-        />
-        <DevelopmentTimeline />
-      </div>
-    </section>
-
-    <section class="section section-surface" id="outputs">
-      <div class="container">
-        <SectionHeader
-          eyebrow="Authentic evidence"
-          title="Repository outputs, shown with their engineering caveats"
-          description="Animations remain available on the web, while static frames are used for reduced-motion preferences and print."
-        />
-        <div class="output-grid output-grid--authentic">
-          {authenticMedia.map((media) => <EvidenceMedia media={media} />)}
-        </div>
-
-        <div class="pending-evidence">
-          <div>
-            <p class="eyebrow">Additional captures planned</p>
-            <h3>Documented subsystems without a dedicated portfolio frame</h3>
-            <p>These placeholders identify evidence still worth capturing; they do not represent fabricated output.</p>
-          </div>
-          <div class="pending-evidence-grid">
-            {pendingMedia.map((media) => (
-              <MediaPlaceholder subsystem={media.subsystem} instruction={media.requiredCapture} compact />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="limitations">
-      <div class="container split-layout engineering-boundaries">
-        <div>
-          <SectionHeader
-            eyebrow="Current limitations"
-            title="Clear boundaries increase technical credibility"
-            description="Each limitation describes a real implementation boundary rather than hiding it behind broad autonomy language."
-          />
-          <ul class="limitation-list limitation-list--detailed">
-            {limitations.map((limitation) => (
-              <li data-limitation={limitation.id}>
-                <strong>{limitation.title}</strong>
-                <p>{limitation.description}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div id="roadmap">
-          <SectionHeader
-            eyebrow="Planned work"
-            title="The next engineering transitions"
-            description="Roadmap stages are deliberately styled as future work, not completed functionality."
-          />
-          <ol class="roadmap-list">
-            {roadmap.map((item) => (
-              <li class:list={[item.featured && "roadmap-featured"]} data-roadmap-status={item.status}>
-                <span>{item.index}</span>
-                <div>
-                  <small>{item.status}</small>
-                  <strong>{item.title}</strong>
-                  <p>{item.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-cta">
-      <div class="container cta-panel">
-        <div>
-          <p class="eyebrow">Source and documentation</p>
-          <h2>Inspect the implementation, runbook and milestone records.</h2>
-        </div>
-        <a class="button button-primary" href={project.repository} target="_blank" rel="noreferrer">Open GitHub repository</a>
-      </div>
-    </section>
+    <SectionNav />
+    <section class="section" id="architecture"><div class="container">
+      <SectionHeader eyebrow="01 / System architecture" title="Global topology. Local evidence." description="Two parallel implemented streams preserve the distinction between simulator knowledge and perceived geometry." />
+      <SystemArchitecture />
+      <div class="principle-row"><h3>Separate what is known<br /> from what is observed.</h3><div><p>OpenDRIVE provides privileged nominal global topology. Perception provides local lane geometry and confidence. Neither silently replaces the other: global routing does not consume LaneMap, and the local mapper does not fill missing markings with OpenDRIVE.</p><a class="text-link" href={sourceUrl('docs/agent/ARCHITECTURE.md')}>Source architecture & frame registry ↗</a></div></div>
+    </div></section>
+    <section class="section section-raised" id="lane-stack"><div class="container">
+      <SectionHeader eyebrow="02 / Lane perception + temporal tracking" title="From markings to persistent geometry." />
+      <div class="lane-editorial"><ProjectMedia media={laneMedia} /><div><p class="lead">Each curve carries a history, not just a shape.</p><p>Temporal confirmation, geometric gates and confidence-weighted smoothing stabilize lane estimates. Buffered hero odometry moves prior geometry into the new ego pose, where it is sampled and refitted.</p><p>Missing, rejected and held measurements remain distinct. One-sided inference requires width confidence and is time-limited; it is marked separately from a direct observation.</p><p class="callout">A nonempty Path is not a confidence statement. Quality and measurement state travel in <code>tracking_status</code> JSON.</p></div></div>
+      <ol class="pipeline-list">{lanePipeline.map((step,index) => <li><span class="pipeline-index">0{index + 1}</span><div><h3>{step.title}</h3><code>{step.node}</code></div><p>{step.description}</p></li>)}</ol>
+      <a class="text-link" href={sourceUrl('docs/milestones/lane_perception_tracking_mapping.md')}>Lane implementation & validation record ↗</a>
+    </div></section>
+    <section class="section" id="lanemap"><div class="container">
+      <div class="editorial-heading"><SectionHeader eyebrow="03 / Rolling LaneMap" title="Remember evidence. Preserve uncertainty." /><p class="lead">A local, perception-derived environment representation in direct <code>carla_world</code>.</p></div>
+      <div class="semantic-grid">{laneMapSemantics.map(note => <article><h3>{note.title}</h3><p>{note.description}</p></article>)}</div>
+      <div class="contract-strip"><code>LaneMap</code><span>Local IDs</span><span>Local observation revision</span><span>Unknown topology</span><span>Perception-derived</span></div>
+      <p class="source-note">Current segment flags are not collision or intersection checks. Curvature is computed in local forward-left coordinates; the downstream signed-curvature convention still needs validation.</p>
+    </div></section>
+    <section class="section section-raised" id="routing"><div class="container">
+      <SectionHeader eyebrow="04 / Global routing" title="An inspectable graph. An explicit route." description="The project owns its directed topology, sampled routing graph and search logic. CARLA supplies privileged map information, not a black-box route result." />
+      <ProjectMedia media={heroMedia} />
+      <ol class="pipeline-list routing-list">{routingPipeline.map((step,index) => <li><span class="pipeline-index">0{index + 1}</span><h3>{step.title}</h3><p>{step.description}</p></li>)}</ol>
+      <div class="semantic-grid semantic-grid--three">{routePlanSemantics.map(note => <article><h3>{note.title}</h3><p>{note.description}</p></article>)}</div>
+      <p class="callout">A legal lane-change graph edge is not a behavior decision. A valid RoutePlan is not a dynamically feasible trajectory.</p>
+      <details class="technical-disclosure"><summary>Search triggers, invalidation and route lifetime</summary><div><p>A new accepted goal triggers search. Odometry triggers replanning when the sampled start node changes. Goal orientation is ignored.</p><p>A completed no-path search publishes INVALID. Rejected goal frames/projections retain the previous accepted goal; failed ego association logs and returns without clearing the route. There is no route-age timeout. PARTIAL and BLOCKED are schema constants without active planner behavior.</p><a href={sourceUrl('ros/ros2_ws/src/global_route_planner/global_route_planner/global_route_planner_node.py')}>Inspect planner source ↗</a></div></details>
+    </div></section>
+    <section class="section association-section" id="association" data-status="next"><div class="container">
+      <SectionHeader eyebrow="05 / Next integration boundary — not implemented" title="Connecting global intent to local perception." description="A separate association layer is planned. Its geometry, timing rules and output interface are not yet finalized." />
+      <div class="association-inputs"><div><span class="mono-label">Global intent</span><strong>RoutePlan</strong><p>Nominal route · OpenDRIVE provenance</p></div><span aria-hidden="true">+</span><div><span class="mono-label">Local evidence</span><strong>LaneMap</strong><p>Perceived geometry · confidence</p></div></div>
+      <div class="planned-reference"><span class="status-label">Next · planned</span><h3>Route-relative local association</h3><p>Select an ego-local route window, project lane geometry and assess progress <code>s</code>, signed lateral offset <code>d</code>, heading discrepancy, overlap/coverage and confidence gates.</p></div>
+      <div class="principle-row"><h3>Geometric association.<br />Independent identities.</h3><div><p>LaneMap IDs are local; RoutePlan IDs encode global topology provenance. Local observation revisions and global map fingerprints also mean different things. ID equality cannot associate these representations.</p><p>Planned acceptance rules include input age, route/reset behavior, partial or disappearing lanes and explicit no-valid-association output. No additional world y flip and no OpenDRIVE-filled perception.</p><a class="text-link" href={sourceUrl('docs/agent/ROADMAP.md')}>Read the planned association boundary ↗</a></div></div>
+    </div></section>
+    <section class="section" id="interfaces"><div class="container">
+      <SectionHeader eyebrow="06 / ROS2 interfaces" title="Contracts at the subsystem boundaries." description="Selected current production topics, checked against message definitions and their producers/consumers." />
+      <InterfaceTable />
+      <aside class="frame-note"><p class="mono-label">Coordinate contract / production and display</p><div class="frame-columns"><div><h3>Production autonomy</h3><code>carla_world → hero</code><p>RoutePlan and LaneMap world positions/headings use direct CARLA coordinates.</p></div><div><h3>Foxglove display only</h3><code>carla_world_viz → hero_viz</code><p>The adapter reflects copied global geometry. Local forward-left lane points are reattached without another mirror.</p></div></div><p>The two world trees are not connected by a physical TF transform. <code>_viz</code> topics are display outputs, never planner inputs. The <code>hero</code> label alone does not make local forward-left lane coordinates numerically compatible with direct-CARLA production TF.</p></aside>
+    </div></section>
+    <section class="section section-raised" id="evidence"><div class="container">
+      <SectionHeader eyebrow="07 / Runtime evidence" title="Observations, with their context attached." description="Development diagnostics support bounded claims about interfaces, frames and integration. Screenshots illustrate the workflow; they do not prove correctness." />
+      <EvidencePanel />
+      <details class="technical-disclosure"><summary>Route-to-graph probe: what the recorded zero does and does not mean</summary><div><p>The supplied Town10HD probe reported 323 route poses, 6,196 graph points and route-to-graph min/mean/median/max of 0.0000 m. This supports shared graph provenance, not trajectory feasibility.</p><p>The raw method is not checked in. The point count corresponds numerically to two endpoints per 3,098 lane-follow edges, not every marker point; the visualizer’s z offset also prevents inferring exact 3D equality.</p><a href={sourceUrl('docs/milestones/global_route_planning.md')}>Recorded probe and qualifications ↗</a></div></details>
+    </div></section>
+    <section class="section" id="decisions"><div class="container">
+      <SectionHeader eyebrow="08 / Engineering decisions" title="Simple algorithms. Deliberate boundaries." />
+      <div class="decision-list">{decisions.map((decision,index) => <article><span class="mono-label">0{index + 1}</span><h3>{decision.title}</h3><p>{decision.description}</p></article>)}</div>
+      <a class="text-link" href={sourceUrl('docs/agent/DECISION_LOG.md')}>Architecture decision log ↗</a>
+    </div></section>
+    <section class="section section-raised" id="evolution"><div class="container">
+      <SectionHeader eyebrow="09 / Development evolution" title="From perception experiments to routing." description="The earlier work remains part of the story. The critical path now runs through lane geometry, local memory and global route intent." />
+      <DevelopmentTimeline />
+      <details class="technical-disclosure"><summary>Earlier foundations · phases 0–7</summary><div><p>MMSegmentation fundamentals → Cityscapes expansion → ROS2/CARLA integration → simulation control → bags and Foxglove → ASCII debugging → repository structuring → depth-aware navigation and accumulated local mapping.</p><p>Semantic object extraction/tracking, relative depth, fusion and semantic-depth free space remain parallel capabilities. Occupancy used heuristic projection; accumulated grid mapping used simulator odometry and was not full SLAM.</p><ProjectMedia media={historicalMedia} /><a href={sourceUrl('docs/timeline.md')}>Full development timeline ↗</a></div></details>
+    </div></section>
+    <section class="section" id="boundaries"><div class="container">
+      <SectionHeader eyebrow="10 / Current boundaries + roadmap" title="The next step is a connection, not a claim of autonomy." />
+      <div class="boundaries-grid"><div class="boundary-list">{limitations.map(item => <article><h3>{item.title}</h3><p>{item.description}</p></article>)}</div><ol class="roadmap-list">{roadmap.map(item => <li data-status={item.status}><span class="status-label">{item.status}</span><h3>{item.title}</h3><p>{item.description}</p></li>)}</ol></div>
+      <div class="source-checkpoint"><div><p class="mono-label">Source checkpoint / {source.reviewed}</p><p><code>{source.branch}</code><br /><a href={`${source.repository}/commit/${source.commit}`}><code>{source.commit.slice(0,12)}</code> ↗</a></p></div><a class="button button-primary" href={project.branchUrl}>Explore the implementation ↗</a></div>
+    </div></section>
   </main>
 </BaseLayout>

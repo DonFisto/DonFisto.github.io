@@ -1,0 +1,69 @@
+---
+import type { ProjectMedia } from '../data/types';
+import { mediaMetadata } from '../data/generatedMedia';
+interface Props { media: ProjectMedia; priority?: boolean; printMode?: boolean; }
+const {media, priority = false, printMode = false} = Astro.props;
+const metadata = mediaMetadata[media.metadataKey as keyof typeof mediaMetadata];
+const motion = !printMode ? media.motion : undefined;
+const size = motion ? mediaMetadata[motion.metadataKey as keyof typeof mediaMetadata].sizeBytes : 0;
+---
+<figure class="project-media" data-evidence-media={media.id} data-motion-media={motion ? '' : undefined}>
+  <div class="media-frame" style={`aspect-ratio:${metadata.width}/${metadata.height}`}>
+    <picture>
+      {media.webpSrc && !printMode && <source srcset={media.webpSrc} type="image/webp" />}
+      <img src={media.src} alt={media.alt} width={metadata.width} height={metadata.height} loading={priority || printMode ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : undefined} decoding="async" />
+    </picture>
+  </div>
+  {motion && <div class="motion-controls">
+    <button class="button button-secondary motion-play" hidden data-src={motion.src} data-kind={motion.kind} data-label={motion.label} aria-pressed="false">{motion.label} <span aria-hidden="true">▷</span></button>
+    <span class="motion-hint">Static preview · animation loads on request ({(size / 1_000_000).toFixed(1)} MB)</span>
+    <span class="motion-message" role="status" aria-live="polite"></span>
+  </div>}
+  <figcaption><p class="mono-label">{media.title}</p><p>{media.caption}</p><small>{media.caveat}</small>
+    {!printMode && <a class="media-original" href={media.src} target="_blank" rel="noreferrer">Open full-resolution image <span aria-hidden="true">↗</span></a>}
+  </figcaption>
+</figure>
+<script>
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll<HTMLElement>('[data-motion-media]').forEach(figure => {
+    const button = figure.querySelector<HTMLButtonElement>('.motion-play')!;
+    const frame = figure.querySelector<HTMLElement>('.media-frame')!;
+    const picture = frame.querySelector('picture')!;
+    const message = figure.querySelector<HTMLElement>('.motion-message')!;
+    const hint = figure.querySelector<HTMLElement>('.motion-hint')!;
+    const originalHint = hint.textContent;
+    let active: HTMLImageElement | HTMLVideoElement | undefined;
+    let playing = false;
+    const stop = () => {
+      playing = false;
+      if (active instanceof HTMLVideoElement) { active.pause(); active.removeAttribute('src'); active.load(); }
+      active?.remove(); active = undefined; picture.hidden = false;
+      button.textContent = button.dataset.label!; button.setAttribute('aria-pressed', 'false'); message.textContent = '';
+    };
+    const preference = () => {
+      if (reducedMotion.matches) stop();
+      button.hidden = reducedMotion.matches;
+      hint.textContent = reducedMotion.matches ? 'Reduced motion enabled · static diagnostic view' : originalHint;
+    };
+    preference(); reducedMotion.addEventListener('change', preference);
+    button.addEventListener('click', () => {
+      if (playing) { stop(); return; }
+      if (reducedMotion.matches) return;
+      playing = true;
+      message.textContent = 'Loading animation…';
+      button.textContent = 'Stop demo · show static image'; button.setAttribute('aria-pressed','true');
+      const visual = document.createElement(button.dataset.kind === 'video' ? 'video' : 'img');
+      active = visual;
+      visual.className = 'motion-visual';
+      const ready = () => {
+        if (active !== visual || !playing) return;
+        picture.hidden = true; message.textContent = 'Playing · use Stop demo to return to the static view.';
+        if (visual instanceof HTMLVideoElement) void visual.play().catch(() => { stop(); message.textContent = 'Playback unavailable. Static view retained.'; });
+      };
+      visual.addEventListener('error', () => { if (active !== visual) return; stop(); message.textContent = 'Animation could not load. Static view retained.'; });
+      if (visual instanceof HTMLVideoElement) { visual.muted = true; visual.loop = true; visual.playsInline = true; visual.setAttribute('aria-label', picture.querySelector('img')!.alt); visual.addEventListener('loadeddata', ready, {once:true}); }
+      else { visual.alt = picture.querySelector('img')!.alt; visual.addEventListener('load', ready, {once:true}); }
+      frame.append(visual); visual.src = button.dataset.src!;
+    });
+  });
+</script>

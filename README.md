@@ -1,88 +1,59 @@
-# Daniel Martínez-Cabeza de Vaca Guillén — Portfolio
+# Daniel Martínez — Engineering portfolio
 
-This repository is being migrated from a single static `index.html` to a maintainable Astro portfolio.
+Astro / TypeScript / vanilla CSS portfolio for **Autonomous Driving Laboratory**: lane perception, temporal LaneMap and OpenDRIVE global routing in CARLA + ROS2. Static output for GitHub Pages, with an independently designed four-page A4 landscape PDF.
 
-## Governance and evidence
+## Governance
 
-Before changing public content, read:
+Read `PORTFOLIO_SPEC.md`, `PORTFOLIO_APPROVED_DECISIONS.md`, `PORTFOLIO_EVIDENCE_INVENTORY.md`, `PORTFOLIO_MEDIA_INVENTORY.md` and `PORTFOLIO_REVIEW_CHECKLIST.md` before changing claims. Current robotics source supersedes old portfolio technical scope. Historical PHASE_* files and the July evidence annex remain historical records.
 
-- `PORTFOLIO_SPEC.md`
-- `PORTFOLIO_APPROVED_DECISIONS.md`
-- `PORTFOLIO_EVIDENCE_INVENTORY.md`
-- `PORTFOLIO_MEDIA_INVENTORY.md`
-- `PORTFOLIO_IMPLEMENTATION_PLAN.md`
-- `PORTFOLIO_REVIEW_CHECKLIST.md`
+Technical source was reviewed at `42a250e34197b5c51ecca227a69f6c566df1de2c` on `feature/route-lane-association`. Association is NEXT; behavior, trajectory planning and trajectory tracking/control are not implemented for this pipeline.
 
-Public technical claims must remain traceable to repository evidence or explicit user confirmation.
+## Develop and verify
 
-## Phase 2 status
+Node.js 22.12+:
 
-The Astro foundation includes:
-
-- a project-dominant general homepage;
-- a detailed autonomous-driving project route;
-- typed evidence-aware content data;
-- a reusable dark engineering design system;
-- accessible responsive navigation;
-- honest media placeholders;
-- a four-page A4 landscape print shell;
-- a static 404 page;
-- a foundation verification script.
-
-The existing root `index.html` is intentionally preserved. If GitHub Pages currently publishes from the branch root, the old site remains live until deployment is deliberately switched to GitHub Actions in a later phase.
-
-## Local development
-
-Requires Node.js 22.12 or newer.
-
-```bash
+```sh
 npm ci
+npx playwright install chromium
 npm run dev
 ```
 
-## Validation
-
-```bash
-npm run validate
+```sh
+npm run check
+npm run build
+npm run verify
+npm run build:portfolio
 ```
 
-This runs Astro type checking, creates the production build, and verifies critical Phase 2 invariants.
+`build:portfolio` checks/types/builds the web, verifies current scope/privacy/local links/media provenance, exports the PDF with clipping checks, rebuilds to include that PDF, and checks exactly four A4 landscape pages and the release artifact. `verify:deployment` is a local artifact check; it does not contact GitHub or deploy.
 
-## Routes
+If Chromium is installed in a non-default directory, set `PLAYWRIGHT_BROWSERS_PATH` for export/build commands. No browser path is hardcoded in source.
 
-- `/`
-- `/projects/autonomous-driving/`
-- `/portfolio-print/`
-- `/404.html`
+## Routes and content
 
-## Media
+- `/`: project-led portfolio, architecture, evidence, engineering themes, profile/contact.
+- `/projects/autonomous-driving/`: full engineering case study.
+- `/portfolio-print/`: responsive utility preview; print media uses exactly four fixed A4 landscape sheets.
+- `/404.html`: static not-found page.
+- `/downloads/Daniel-Martinez-Cabeza-de-Vaca-Robotics-Portfolio.pdf`: generated attachment.
 
-Authentic project media will be integrated in Phase 4. Until then, placeholders are explicitly labelled and cannot be confused with real results.
+Typed current project content lives in `src/data/autonomousDriving.ts`; approved personal fields use the `PublicProfile` allowlist. The architecture is semantic HTML/CSS, with vector lines/text in print. Minimal vanilla JS handles navigation and optional motion. No client framework or remote fonts.
 
-## Phase 3 status
+## Authentic media
 
-The source now includes the verified technical narrative:
+`public/media/autonomous-driving/provenance.json` pins seven original assets by repository, branch, commit, source/destination path and SHA-256. The planning image is the hero. The 14.5 MB lane GIF loads only on request; reduced-motion users keep the static diagnostic photo. Static-only print media is independent of motion playback.
 
-- accessible vector system architecture;
-- selected ROS2 interfaces;
-- engineering contribution categories;
-- detailed subsystem methods and boundaries;
-- eight-phase development trajectory.
+Optional authoring tools (ImageMagick required locally, not in the release pipeline):
 
-Authentic repository media remains scheduled for Phase 4. The legacy root `index.html` is still intentionally preserved and remains the branch-root deployment entry point.
+```sh
+node scripts/generate-media-derivatives.mjs
+npm run media:metadata
+```
 
+The provenance README and media inventory document uncropped derivatives and historical evidence. Do not use historical accumulated occupancy as a current vector LaneMap screenshot.
 
-## Phase 4 status
+## Deployment and preserved history
 
-Authentic repository media is now integrated into the Astro source:
+GitHub Actions builds/deploys `dist`; `deploy-pages.yml` is manual (`workflow_dispatch`). No automatic deployment change is part of this redesign. The root `index.html`, legacy assets, PHASE_* documentation and historical application scripts/workflows are preserved for rollback and are not the current Astro artifact. Do not run historical apply-phase workflows against the redesigned source.
 
-- live CARLA perception demonstration;
-- semantic segmentation overlay;
-- semantic object extraction and tracking overlay;
-- local occupancy and accumulated mapping demonstration;
-- static poster frames for print and reduced-motion preferences;
-- generated media dimensions and provenance-aware captions.
-
-The print route now uses only static authentic media. Two honest web placeholders remain for dedicated depth/fusion and free-space/occupancy captures that are documented in code but not yet available as separate portfolio assets.
-
-The legacy root `index.html` remains intentionally preserved until Phase 5 deployment.
+No commit, push or deployment is authorized as part of redesign review. Temporary browser captures/probes belong in `/tmp`.

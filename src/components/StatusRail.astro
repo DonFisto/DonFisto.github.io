@@ -1,0 +1,9 @@
+---
+import { implementationStatus } from '../data/autonomousDriving';
+---
+<div class="status-overview">
+  <p class="mono-label">Development status <span>Parallel workstreams, not a serial pipeline</span></p>
+  <ul class="status-rail" aria-label="Current implementation status">
+    {implementationStatus.map(item => <li data-status={item.status}><span class="status-label">{item.status}</span><strong>{item.title}</strong></li>)}
+  </ul>
+</div>

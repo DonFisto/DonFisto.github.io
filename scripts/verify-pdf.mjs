@@ -11,7 +11,7 @@ const builtPdf = resolve(
 
 const EXPECTED_WIDTH = 841.89;
 const EXPECTED_HEIGHT = 595.28;
-const TOLERANCE = 6;
+const TOLERANCE = 1.5;
 
 async function verifyFile(path, label) {
   const file = await stat(path);
@@ -48,3 +48,8 @@ async function verifyFile(path, label) {
 
 await verifyFile(publicPdf, "Public");
 await verifyFile(builtPdf, "Built");
+
+const publicBytes = await readFile(publicPdf);
+const builtBytes = await readFile(builtPdf);
+if (!publicBytes.equals(builtBytes)) throw new Error("Built PDF differs from the freshly exported public PDF.");
+console.log("Public and built PDFs are byte-identical.");

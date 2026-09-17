@@ -1,0 +1,22 @@
+---
+import { architectureStreams } from '../data/autonomousDriving';
+interface Props { compact?: boolean; }
+const { compact = false } = Astro.props;
+---
+<figure class:list={['system-architecture', compact && 'system-architecture--compact']} aria-label="Two parallel implemented streams and their planned integration">
+  <div class="architecture-streams">
+    {architectureStreams.map(stream => <section class={`architecture-stream stream-${stream.id}`} data-stream={stream.id}>
+      <header><p class="mono-label">{stream.id === 'local' ? '01 /' : '02 /'} {stream.origin}</p><h3>{stream.title}</h3><span class="status-label" data-status="implemented">Implemented</span></header>
+      <ol>{stream.steps.map(step => <li>{step}</li>)}</ol>
+      <div class="stream-output"><strong>{stream.output}</strong><span>{stream.meaning}</span></div>
+    </section>)}
+  </div>
+  <div class="architecture-join" aria-hidden="true"><span></span><span></span></div>
+  <div class="association-boundary" data-status="next"><span class="status-label">Next · not implemented</span><strong>RoutePlan ↔ LaneMap association</strong><p>Global intent meets local perception — through geometry, not ID equality.</p></div>
+  <ol class="architecture-future" aria-label="Future layers, not implemented">
+    <li><span class="status-label">Future</span> Behavior / maneuver planning</li>
+    <li><span class="status-label">Future</span> Local trajectory planning</li>
+    <li><span class="status-label">Future</span> Trajectory tracking / control</li>
+  </ol>
+  <figcaption class="architecture-legend"><span><i class="legend-line" aria-hidden="true"></i> Solid: implemented within each stream</span><span><i class="legend-line legend-line--planned" aria-hidden="true"></i> Dashed: planned integration</span><span>OpenDRIVE is privileged map information, not perception evidence.</span></figcaption>
+</figure>

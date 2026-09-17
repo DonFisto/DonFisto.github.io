@@ -211,6 +211,23 @@ async function main() {
       }
     }
 
+    const clipped = await page.evaluate(() => {
+      const errors = [];
+      for (const sheet of document.querySelectorAll('.pdf-page')) {
+        const box = sheet.getBoundingClientRect();
+        const padding = parseFloat(getComputedStyle(sheet).paddingBottom);
+        for (const element of sheet.querySelectorAll('.pdf-page-content *')) {
+          const rect = element.getBoundingClientRect();
+          if (!rect.width || !rect.height) continue;
+          if (rect.bottom > box.bottom - padding + 2 || rect.right > box.right + 1 || rect.left < box.left - 1) {
+            errors.push({page: sheet.getAttribute('data-page'), element: element.tagName, text: element.textContent?.slice(0,80)});
+          }
+        }
+      }
+      return errors;
+    });
+    if (clipped.length) throw new Error(`Print content exceeds sheet bounds: ${JSON.stringify(clipped.slice(0,12))}`);
+
     await page.pdf({
       path: OUTPUT,
       printBackground: true,

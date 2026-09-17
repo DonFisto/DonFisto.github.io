@@ -1,0 +1,11 @@
+---
+import { personal } from '../data/personal';
+---
+<section class="section profile-section" id="profile">
+  <div class="container profile-grid">
+    <div><p class="eyebrow">06 / About Daniel</p><h2>Mathematics meets<br /> robotics engineering.</h2><p class="profile-intro">{personal.academicProfile}<br />{personal.university}</p><p class="muted">Expected graduation {personal.expectedGraduation}.<br />{personal.exchange}.</p></div>
+    <div class="profile-contact"><p class="eyebrow">Open to opportunities</p><p class="lead">{personal.availability}</p><a class="contact-link" href={`mailto:${personal.email}`}>Let’s talk <span aria-hidden="true">↗</span></a><a href={`mailto:${personal.email}`}>{personal.email}</a>
+      <ul class="languages" aria-label="Languages">{personal.languages.map(item => <li>{item.language}<span>{item.level}</span></li>)}</ul>
+    </div>
+  </div>
+</section>

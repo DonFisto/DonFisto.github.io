@@ -1,136 +1,26 @@
-export type EvidenceStatus =
-  | "verified-source"
-  | "verified-docs"
-  | "verified-media"
-  | "verified-multiple"
-  | "user-confirmed"
-  | "partial"
-  | "unverified"
-  | "contradicted"
-  | "superseded";
-
-export interface EvidenceReference {
-  repository: "robotics" | "portfolio" | "user-confirmed";
-  path?: string;
-  symbolOrSection?: string;
-  note?: string;
+export type ImplementationStatus = 'implemented' | 'next' | 'future' | 'historical';
+export interface StatusItem { title: string; status: ImplementationStatus }
+export interface ArchitectureStream {
+  id: 'local' | 'global'; title: string; origin: string;
+  steps: readonly string[]; output: string; meaning: string;
 }
-
-export interface PublishableClaim {
-  id: string;
-  text: string;
-  status: EvidenceStatus;
-  references: EvidenceReference[];
-  caveat?: string;
-  publishable: boolean;
-  requiresDanielConfirmation: boolean;
-}
-
-export interface Technology {
-  name: string;
-  category: "primary" | "secondary" | "general-skill";
-  projectVerified: boolean;
-}
-
-export interface Contribution {
-  title: string;
-  badge: string;
-  bullets: string[];
-  accent: "model" | "data" | "systems" | "mapping";
-}
-
-export interface TimelinePhase {
-  index: number;
-  title: string;
-  summary: string;
-  outcome: string;
-}
-
-export interface PlaceholderMedia {
-  id: string;
-  subsystem: string;
-  requiredCapture: string;
-  alt: string;
-}
-
-export type MediaKind = "image" | "animation";
-
+export interface PipelineStep { title: string; node?: string; description: string }
+export interface SemanticNote { title: string; description: string }
+export interface RosInterface { topic: string; type: string; frame: string; role: string }
+export interface RuntimeEvidence { observation: string; result: string; context: string; source: string }
+export interface EvolutionItem { period: string; title: string; description: string; status: ImplementationStatus }
 export interface ProjectMedia {
-  id: string;
-  title: string;
-  subsystem: string;
-  kind: MediaKind;
-  src: string;
-  webpSrc?: string;
-  poster?: string;
-  printSrc: string;
-  metadataKey: string;
-  alt: string;
-  caption: string;
-  caveat?: string;
-  sourceRepositoryPath: string;
+  id: string; title: string; src: string; webpSrc?: string; metadataKey: string;
+  alt: string; caption: string; caveat: string;
+  motion?: { kind: 'gif' | 'video'; src: string; metadataKey: string; label: string };
 }
-
 export interface GeneratedMediaMetadata {
-  width: number;
-  height: number;
-  sizeBytes: number;
+  width: number; height: number; sizeBytes: number; sha256: string;
 }
-
-export interface Limitation {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export interface RoadmapItem {
-  index: string;
-  title: string;
-  description: string;
-  featured: boolean;
-  status: "planned";
-}
-
-export interface ArchitectureNode {
-  id: string;
-  labelLines: string[];
-  implementationLabel?: string;
-  group: "input" | "perception" | "fusion" | "spatial" | "behavior" | "mapping";
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export interface ArchitectureEdge {
-  id: string;
-  from: string;
-  to: string;
-  path: string;
-  style: "primary" | "auxiliary";
-  label?: string;
-}
-
-export interface ArchitectureGroup {
-  label: string;
-  x: number;
-  y: number;
-  accent: "data" | "model" | "navigation" | "mapping";
-}
-
-export interface RosTopic {
-  name: string;
-  messageType: string;
-  role: string;
-  stage: "tracking" | "fusion" | "free-space" | "occupancy" | "mapping";
-}
-
-export interface TechnicalDetail {
-  id: string;
-  title: string;
-  input: string;
-  method: string;
-  output: string;
-  engineeringNote: string;
-  accent: "model" | "data" | "systems" | "mapping";
+export interface PublicProfile {
+  name: string; shortName: string; email: string; githubProfile: string;
+  academicProfile: string; university: string; expectedGraduation: string;
+  exchange: string; positioning: string; availability: string;
+  languages: readonly { language: string; level: string }[];
+  publicContactFields: readonly ['email', 'github'];
 }

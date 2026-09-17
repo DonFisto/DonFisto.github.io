@@ -1,32 +1,86 @@
+/* Shared geometry; theme values describe semantic roles only. */
 :root {
-  --color-bg: #07111f;
-  --color-bg-raised: #0b1828;
-  --color-surface: #102237;
-  --color-surface-light: #eaf1f6;
-  --color-text: #f4f8fb;
-  --color-text-muted: #aec0cf;
-  --color-text-dark: #112033;
-  --color-accent: #55e6d1;
-  --color-accent-soft: #183c43;
-  --color-model: #a78bfa;
-  --color-data: #60a5fa;
-  --color-navigation: #fb923c;
-  --color-mapping: #4ade80;
-  --color-border: rgba(174, 192, 207, 0.22);
-  --color-border-strong: rgba(85, 230, 209, 0.5);
-  --font-sans: "IBM Plex Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-  --space-1: 0.375rem;
-  --space-2: 0.625rem;
-  --space-3: 0.875rem;
-  --space-4: 1.25rem;
-  --space-5: 1.75rem;
-  --space-6: 2.5rem;
-  --space-7: 4rem;
-  --space-8: 6rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
-  --radius-lg: 1.25rem;
-  --content-max: 1180px;
-  --shadow-soft: 0 22px 60px rgba(0, 0, 0, 0.22);
+  color-scheme: light;
+  --color-bg: #f4f3ef;
+  --color-bg-raised: #eeeee8;
+  --color-bg-deep: #e8e9e3;
+  --color-text: #202930;
+  --color-text-muted: #53616b;
+  --color-text-soft: #3d4c55;
+  --color-border: #c8cdcc;
+  --color-rule: #899593;
+  --color-control-border: #7e8987;
+  --color-accent: #286555;
+  --color-accent-hover: #1e5446;
+  --color-on-accent: #ffffff;
+  --color-local: #315f8d;
+  --color-global: #69528a;
+  --color-implemented: #286555;
+  --color-next: #80591c;
+  --color-future: #53616b;
+  --color-local-surface: #e7edf1;
+  --color-global-surface: #eeebf2;
+  --color-next-surface: #eee9dd;
+  --color-media: #e9eae5;
+  --color-focus: #286b9d;
+  --font-sans: 'IBM Plex Sans', 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --content-max: 1312px;
+  --gutter: 40px;
+  --header-height: 64px;
+  --section-space: 112px;
 }
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #101419;
+  --color-bg-raised: #171c22;
+  --color-bg-deep: #0d1115;
+  --color-text: #f0eee8;
+  --color-text-muted: #abb3bb;
+  --color-text-soft: #cbd0d3;
+  --color-border: #38424b;
+  --color-rule: #56616a;
+  --color-control-border: #63717c;
+  --color-accent: #93cdbd;
+  --color-accent-hover: #b4e0d3;
+  --color-on-accent: #122923;
+  --color-local: #98bde5;
+  --color-global: #c4b3e6;
+  --color-implemented: #93cdbd;
+  --color-next: #e7bd76;
+  --color-future: #abb3bb;
+  --color-local-surface: #19232d;
+  --color-global-surface: #24212e;
+  --color-next-surface: #27251f;
+  --color-media: #171c22;
+  --color-focus: #9ec9ed;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]):not(.print-document) {
+    color-scheme: dark;
+    --color-bg: #101419;
+    --color-bg-raised: #171c22;
+    --color-bg-deep: #0d1115;
+    --color-text: #f0eee8;
+    --color-text-muted: #abb3bb;
+    --color-text-soft: #cbd0d3;
+    --color-border: #38424b;
+    --color-rule: #56616a;
+    --color-control-border: #63717c;
+    --color-accent: #93cdbd;
+    --color-accent-hover: #b4e0d3;
+    --color-on-accent: #122923;
+    --color-local: #98bde5;
+    --color-global: #c4b3e6;
+    --color-implemented: #93cdbd;
+    --color-next: #e7bd76;
+    --color-future: #abb3bb;
+    --color-local-surface: #19232d;
+    --color-global-surface: #24212e;
+    --color-next-surface: #27251f;
+    --color-media: #171c22;
+    --color-focus: #9ec9ed;
+  }
+}
+@media (max-width: 1100px) { :root { --gutter: 32px; --section-space: 96px; } }
+@media (max-width: 700px) { :root { --gutter: 20px; --section-space: 72px; --header-height: 60px; } }

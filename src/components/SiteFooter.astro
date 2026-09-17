@@ -1,16 +1,11 @@
 ---
-import { personal } from "../data/personal";
+import { personal } from '../data/personal';
+import { source } from '../data/autonomousDriving';
 ---
-
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div>
-      <strong>{personal.name}</strong>
-      <p>{personal.positioning}</p>
-    </div>
-    <div class="footer-links">
-      <a href={`mailto:${personal.email}`}>{personal.email}</a>
-      <a href={personal.githubProfile} target="_blank" rel="noreferrer">github.com/DonFisto</a>
-    </div>
+    <div><a class="brand" href="/">Daniel Martínez</a><p>Mathematics · Computer science · Robotics</p></div>
+    <div class="footer-links"><a href={personal.githubProfile}>GitHub ↗</a><a href={`mailto:${personal.email}`}>Email ↗</a><a href="/portfolio-print/">Print preview</a></div>
   </div>
+  <div class="container footer-note">Technical source reviewed {source.reviewed}. Individual research prototype.</div>
 </footer>

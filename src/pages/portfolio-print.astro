@@ -1,84 +1,52 @@
 ---
-import PrintLayout from "../layouts/PrintLayout.astro";
-import ArchitectureDiagram from "../components/ArchitectureDiagram.astro";
-import PdfPage from "../components/PdfPage.astro";
-import EvidenceMedia from "../components/EvidenceMedia.astro";
-import ContributionCard from "../components/ContributionCard.astro";
-import DevelopmentTimeline from "../components/DevelopmentTimeline.astro";
-import RosTopicList from "../components/RosTopicList.astro";
-import { personal } from "../data/personal";
-import {
-  contributions,
-  heroMedia,
-  limitations,
-  printMedia,
-  project,
-  roadmap,
-  technologies,
-} from "../data/autonomousDriving";
+import PrintLayout from '../layouts/PrintLayout.astro';
+import PdfPage from '../components/PdfPage.astro';
+import SystemArchitecture from '../components/SystemArchitecture.astro';
+import ProjectMedia from '../components/ProjectMedia.astro';
+import InterfaceTable from '../components/InterfaceTable.astro';
+import DevelopmentTimeline from '../components/DevelopmentTimeline.astro';
+import { personal } from '../data/personal';
+import { project, heroMedia, laneMedia, source, sourceUrl, implementationStatus, lanePipeline, routingPipeline } from '../data/autonomousDriving';
 ---
-
-<PrintLayout title={`${project.title} — A4 portfolio preview`}>
-  <main class="pdf-document" aria-label="Four-page robotics portfolio preview">
-    <PdfPage number={1} title="Project overview">
-      <div class="pdf-hero-grid">
-        <div>
-          <p class="eyebrow">Engineering portfolio</p>
-          <h1>{project.title}</h1>
-          <p class="pdf-lead">{project.summary}</p>
-          <p class="ownership">{project.ownership}</p>
-          <ul class="pdf-badges">
-            {technologies.slice(0, 8).map((technology) => <li>{technology.name}</li>)}
-          </ul>
-          <dl class="pdf-meta">
-            <div><dt>Engineer</dt><dd>{personal.name}</dd></div>
-            <div><dt>Education</dt><dd>{personal.academicProfile}</dd></div>
-            <div><dt>Repository</dt><dd>github.com/DonFisto/vision-segmentation-autonomous-driving</dd></div>
-          </dl>
-        </div>
-        <EvidenceMedia media={heroMedia} printMode priority />
-      </div>
+<PrintLayout title={`${project.title} — four-page engineering portfolio`}>
+  <nav class="print-toolbar" aria-label="Print preview utilities"><a href="/">← Portfolio</a><span>Four A4 landscape pages · responsive reading preview</span><a href={project.pdfPath} download>Download PDF ↓</a></nav>
+  <main id="main-content" class="pdf-document" aria-label="Four-page robotics portfolio">
+    <PdfPage number={1} title="Autonomous Driving Laboratory">
+      <p class="eyebrow">Engineering portfolio / CARLA + ROS2</p>
+      <div class="pdf-cover-heading"><h1>Autonomous Driving<br /><em>Laboratory.</em></h1><p class="pdf-lead">Perception-derived lane mapping and custom OpenDRIVE global routing.</p></div>
+      <div class="pdf-cover-grid"><div><ProjectMedia media={heroMedia} printMode priority /></div><div class="pdf-cover-copy"><h2>From perception<br /> to routing.</h2><p>{project.summary}</p><p class="ownership">{project.ownership}</p><div class="pdf-stream-summary"><p><strong>LOCAL / LaneMap</strong><br />Perception → geometry → tracking → rolling lane memory</p><p><strong>GLOBAL / RoutePlan</strong><br />OpenDRIVE → directed graph → A* → nominal global route</p></div><p class="pdf-next"><strong>NEXT — NOT IMPLEMENTED</strong><br />RoutePlan ↔ LaneMap association</p></div></div>
+      <ul class="pdf-status">{implementationStatus.map(item => <li data-status={item.status}><span class="status-label">{item.status}</span><strong>{item.title}</strong></li>)}</ul>
+      <div class="pdf-cover-contact"><p><strong>{personal.name}</strong><br />{personal.academicProfile} · {personal.university}</p><p><a href={`mailto:${personal.email}`}>{personal.email}</a><br /><a href={personal.githubProfile}>github.com/DonFisto</a></p></div>
+      <p class="pdf-source-url">Source: <a href={project.repository}>github.com/DonFisto/vision-segmentation-autonomous-driving</a></p>
     </PdfPage>
-
-    <PdfPage number={2} title="System architecture">
-      <p class="eyebrow">System architecture</p>
-      <h2>From camera frames to a short-term accumulated local map</h2>
-      <ArchitectureDiagram compact printMode />
-      <RosTopicList compact />
+    <PdfPage number={2} title="Perception, tracking and LaneMap">
+      <p class="eyebrow">01 / Architecture + local perception</p><h2>Global topology and local evidence stay separate.</h2>
+      <div class="pdf-architecture-grid"><SystemArchitecture compact /><div class="pdf-lane-notes"><ProjectMedia media={laneMedia} printMode />
+        <h3>Implemented lane chain</h3><ol class="pdf-lane-chain">{lanePipeline.map(item => <li>{item.title}</li>)}</ol>
+        <h3>Rolling vector LaneMap</h3><p>Sampled boundaries and centerline, widths, curvature and confidence. Schema 2 emits zero or one local segment; positions/headings publish in direct <code>carla_world</code>.</p><p>Only accepted direct observations become fresh memory. Held/inferred tracks do not reinforce themselves. Topology and speed limit stay unknown.</p><p>With fresh odometry but insufficient perception, an empty LaneMap is valid. This is local memory, not OpenDRIVE or a globally consistent map.</p>
+        <a class="pdf-record-link" href={sourceUrl('docs/milestones/lane_perception_tracking_mapping.md')}>Source record: lane perception, tracking & mapping ↗</a>
+      </div></div>
     </PdfPage>
-
-    <PdfPage number={3} title="Engineering contributions">
-      <p class="eyebrow">Engineering contributions</p>
-      <h2>Building the stack, not just running a model</h2>
-      <div class="pdf-contribution-grid">
-        {contributions.map((contribution) => <ContributionCard contribution={contribution} />)}
-      </div>
-      <DevelopmentTimeline compact />
+    <PdfPage number={3} title="Global routing and interface evidence">
+      <p class="eyebrow">02 / Global routing + runtime evidence</p><h2>A global route is nominal intent, not a trajectory.</h2>
+      <div class="pdf-routing-grid"><div>
+        <ol class="pdf-routing-chain">{routingPipeline.map((item,index) => <li><span>0{index+1}</span><div><h3>{item.title}</h3><p>{item.description}</p></div></li>)}</ol>
+        <div class="pdf-observations"><h3>Observed in development validation</h3><p><strong>Town10HD / Town10HD_Opt, CARLA 0.9.16:</strong> 3,066 sampled nodes, 4,522 edges and one strongly connected component.</p><p><strong>One frame probe:</strong> mean lane-to-route distance 2.949 m direct versus 51.123 m with y flipped. Supports coordinate convention, not association accuracy.</p><small>Reported September 2026; not rerun for this portfolio. Raw probes/bags are not checked in. Scenario observations, not performance guarantees.</small></div>
+      </div><div><InterfaceTable compact />
+        <h3 class="pdf-subheading">RoutePlan contract</h3><p>Coarse graph geometry with global topology provenance. A* is production search; Dijkstra remains the reference. Completed no-path search publishes INVALID. Rejected goals retain the previous accepted goal.</p><p>Reliable, transient-local, depth-1 publication retains the latest message while the publisher lives. No route-age timeout; confidence is heuristic, not probability.</p>
+        <div class="pdf-frame-contract"><h3>Production / display isolation</h3><p><code>carla_world → hero</code> production<br /><code>carla_world_viz → hero_viz</code> display only</p><p>Foxglove reflects copied global geometry. No physical TF connects the two world bases. <code>_viz</code> topics are not planner inputs.</p></div>
+        <a class="pdf-record-link" href={sourceUrl('docs/milestones/global_route_planning.md')}>Source record: global route planning ↗</a>
+      </div></div>
     </PdfPage>
-
-    <PdfPage number={4} title="Outputs, limitations and roadmap">
-      <p class="eyebrow">Authentic outputs — and what comes next</p>
-      <div class="pdf-output-grid">
-        {printMedia.map((media) => <EvidenceMedia media={media} compact printMode />)}
-      </div>
-      <div class="pdf-bottom-grid">
-        <div>
-          <h2>Current limitations</h2>
-          <ul class="pdf-limitations">
-            {limitations.map((limitation) => (
-              <li><strong>{limitation.title}</strong><span>{limitation.description}</span></li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h2>Roadmap</h2>
-          <ol class="pdf-roadmap">
-            {roadmap.map((item) => (
-              <li><span>{item.index}</span><div><small>{item.status}</small><strong>{item.title}</strong></div></li>
-            ))}
-          </ol>
-        </div>
-      </div>
+    <PdfPage number={4} title="Evolution, boundaries and next work">
+      <p class="eyebrow">03 / Engineering progression + next boundary</p><h2>Connecting global intent to local perception.</h2>
+      <div class="pdf-final-grid"><div><DevelopmentTimeline compact /><h3 class="pdf-subheading">Engineering decisions</h3><ul class="pdf-decisions"><li>Keep privileged map topology separate from perceived evidence.</li><li>Own the routing graph; retain Dijkstra as an A* reference.</li><li>Correct production geometry at its source; reflect only display copies.</li><li>Keep global/local IDs and revision meanings independent.</li><li>Record bounded runtime evidence before closing integration milestones.</li></ul></div><div>
+        <div class="pdf-next"><span class="status-label">Next · not implemented</span><h3>RoutePlan ↔ LaneMap association</h3><p>Planned: ego-local route window, projection, progress <code>s</code>, signed offset <code>d</code>, heading discrepancy, overlap/coverage, confidence gates and explicit no-valid-association output. Geometry, not ID equality.</p></div>
+        <h3 class="pdf-subheading">Current boundaries</h3><ul class="pdf-boundaries"><li>Association, behavior/maneuver planning, local trajectory planning and trajectory tracking/control are not implemented for this pipeline.</li><li>CARLA odometry and OpenDRIVE remain privileged inputs. The graph is static, without dynamic-obstacle/prediction costs. Goal orientation is ignored.</li><li>Perception may yield an empty LaneMap. Downstream signed-curvature semantics remain unvalidated.</li></ul>
+        <p class="pdf-future"><strong>FUTURE</strong> · Simple local reference/trajectory planner → understandable baseline tracking/control → repeatable closed-loop evaluation.</p>
+      </div></div>
+      <div class="pdf-profile"><div><strong>{personal.name}</strong><p>{personal.academicProfile} · {personal.university}<br />Expected graduation June 2028 · Erasmus, Universität Stuttgart 2026/2027</p><p>Spanish — Native · English — C1 · German — B1 · French — Basic</p></div><div><p>{personal.availability}</p><a href={`mailto:${personal.email}`}>{personal.email}</a> · <a href={personal.githubProfile}>github.com/DonFisto</a></div></div>
+      <p class="pdf-source-url">Reviewed {source.reviewed} · {source.branch} · <a href={`${source.repository}/commit/${source.commit}`}>{source.commit.slice(0,12)}</a> · <a href="https://donfisto.github.io">donfisto.github.io</a></p>
     </PdfPage>
   </main>
 </PrintLayout>

@@ -1,0 +1,12 @@
+---
+import { interfaces } from '../data/autonomousDriving';
+interface Props { compact?: boolean; }
+const {compact = false} = Astro.props;
+---
+<div class="table-scroll" tabindex="0" role="region" aria-label="Critical ROS2 interfaces, horizontally scrollable on small screens">
+  <table class:list={['interface-table', compact && 'interface-table--compact']}>
+    <caption>Production interfaces · current lane and routing path</caption>
+    <thead><tr><th scope="col">Topic / message type</th><th scope="col">Frame</th>{!compact && <th scope="col">Contract</th>}</tr></thead>
+    <tbody>{interfaces.map(item => <tr><th scope="row"><code>{item.topic}</code><span>{item.type}</span></th><td><code>{item.frame}</code></td>{!compact && <td>{item.role}</td>}</tr>)}</tbody>
+  </table>
+</div>

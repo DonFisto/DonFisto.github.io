@@ -1,0 +1,8 @@
+---
+import { runtimeEvidence, sourceUrl } from '../data/autonomousDriving';
+---
+<div class="evidence-notebook">
+  <p class="mono-label">Development observations / recorded September 2026</p>
+  <p class="evidence-context">Reported in the milestone records; not reproduced for this portfolio. Raw bags/probes are not checked in. These observations are not system-wide performance benchmarks.</p>
+  <dl>{runtimeEvidence.map(item => <div><dt>{item.observation}</dt><dd><strong>{item.result}</strong><p>{item.context}</p><a href={sourceUrl(item.source)}>Milestone record ↗</a></dd></div>)}</dl>
+</div>
