@@ -141,6 +141,28 @@
   .pdf-status { grid-template-columns: repeat(2,1fr); gap: 20px; }
   .pdf-cover-contact { font-size: 14px; }
 }
+
+/* CI-safe vertical slack for the dense architecture/LaneMap sheet. */
+.pdf-page[data-page="2"] .pdf-page-content {
+  padding-top: 4mm;
+}
+
+.pdf-page[data-page="2"] .pdf-lane-notes .media-frame {
+  max-height: 50mm;
+}
+
+.pdf-page[data-page="2"] .pdf-lane-notes h3 {
+  margin: 3mm 0 1.5mm;
+}
+
+.pdf-page[data-page="2"] .pdf-lane-notes p {
+  line-height: 1.35;
+}
+
+.pdf-page[data-page="2"] .pdf-record-link {
+  margin-top: 1mm;
+}
+
 @media print {
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .print-toolbar { display: none; }
